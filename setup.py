@@ -21,7 +21,7 @@ setup(
     python_requires=">=3.12",
     entry_points={
         "console_scripts": [
-            "pingmaster=src.modules.nv_parse:main",
+            "pingmaster=pingmaster.pingmain:main",
         ],
     },
 )
