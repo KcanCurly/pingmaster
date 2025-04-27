@@ -32,3 +32,4 @@ def main():
     send_safe(args.target)
     send_broken_version_packet(args.target)
     send_packets_with_all_tos(args.target)
+    send_do_not_fragment(args.target)
