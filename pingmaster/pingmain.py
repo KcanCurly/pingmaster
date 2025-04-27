@@ -11,7 +11,7 @@ def main():
     args = parser.parse_args()
 
     # Create a raw IP packet
-    packet = get_broken_version_packet()
+    packet = get_broken_version_packet(args.target, "pingmastertest")
 
     # Send the packet
     send(packet)
