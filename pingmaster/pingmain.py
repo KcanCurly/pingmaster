@@ -1,9 +1,9 @@
 import argparse
 from scapy.all import send
-from scapy.layers.inet import IP
+from scapy.layers.inet import IP, IPOption_NOP
 
 def get_broken_version_packet(target, payload, version = 1):
-    return IP(dst=target, version=version, ihl=15, options=[("NOP", None)] * (15 - 5)) / bytes(payload, "utf-8")
+    return IP(dst=target, version=version, ihl=15, options=[(IPOption_NOP, None)] * (15 - 5)) / bytes(payload, "utf-8")
 
 def main():
     parser = argparse.ArgumentParser(description="Send a raw IP packet to a target host.")
