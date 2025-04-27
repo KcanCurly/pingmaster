@@ -3,7 +3,7 @@ from scapy.all import send
 from scapy.layers.inet import IP
 
 def get_broken_version_packet(target, payload, version = 1):
-    return IP(dst=target, version=version) / bytes(payload, "utf-8")
+    return IP(dst=target, version=version, ihl=60) / bytes(payload, "utf-8")
 
 def main():
     parser = argparse.ArgumentParser(description="Send a raw IP packet to a target host.")
