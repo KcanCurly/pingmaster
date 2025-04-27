@@ -13,7 +13,7 @@ def send_broken_version_packet(target, version = 1):
 def send_packets_with_all_tos(target):
     for tos_value in range(256):  # TOS values range from 0 to 255
         # Create an IP packet with the current TOS value
-        ip_packet = IP(dst=target, tos=tos_value) / (b"PM_TOS_" + tos_value)
+        ip_packet = IP(dst=target, tos=tos_value) / (b"PM_TOS_" + tos_value.to_bytes())
         
         # Send the packet
         send(ip_packet)
