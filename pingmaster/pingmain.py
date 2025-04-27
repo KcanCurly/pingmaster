@@ -2,8 +2,13 @@ import argparse
 from scapy.all import send
 from scapy.layers.inet import IP
 
-def get_broken_version_packet(target, payload, version = 1):
-    return IP(dst=target, version=version) / b"PM_VERSION"
+def send_safe(target):
+    ip_packet = IP(dst=target)
+    send(ip_packet)
+
+def send_broken_version_packet(target, version = 1):
+    ip_packet = IP(dst=target, version=version) / b"PM_VERSION"
+    send(ip_packet)
 
 def send_packets_with_all_tos(target):
     for tos_value in range(256):  # TOS values range from 0 to 255
@@ -19,8 +24,6 @@ def main():
     args = parser.parse_args()
 
     # Create a raw IP packet
-    packet = get_broken_version_packet(args.target, "pingmastertest")
+    send_safe(args.target)
+    send_broken_version_packet(args.target)
     send_packets_with_all_tos(args.target)
-
-    # Send the packet
-    send(packet)
