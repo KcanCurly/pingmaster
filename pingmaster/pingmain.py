@@ -19,6 +19,10 @@ def send_packets_with_all_tos(target):
         # Send the packet
         send(ip_packet)
 
+def send_do_not_fragment(target):
+    ip_packet = IP(dst=target, flags="DF") / b"PM_DF"
+    send(ip_packet)
+
 def main():
     parser = argparse.ArgumentParser(description="Send a raw IP packet to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
