@@ -1,9 +1,17 @@
 import argparse
 from scapy.all import send
-from scapy.layers.inet import IP, IPOption_NOP
+from scapy.layers.inet import IP
 
 def get_broken_version_packet(target, payload, version = 1):
-    return IP(dst=target, version=version, ihl=15, options=[(IPOption_NOP, None)] * (15 - 5)) / bytes(payload, "utf-8")
+    return IP(dst=target, version=version) / b"PM_VERSION"
+
+def send_packets_with_all_tos(target):
+    for tos_value in range(256):  # TOS values range from 0 to 255
+        # Create an IP packet with the current TOS value
+        ip_packet = IP(dst=target, tos=tos_value) / b"PM_TOS" + bytes([tos_value])
+        
+        # Send the packet
+        send(ip_packet)
 
 def main():
     parser = argparse.ArgumentParser(description="Send a raw IP packet to a target host.")
@@ -12,6 +20,7 @@ def main():
 
     # Create a raw IP packet
     packet = get_broken_version_packet(args.target, "pingmastertest")
+    send_packets_with_all_tos(args.target)
 
     # Send the packet
     send(packet)
