@@ -5,6 +5,7 @@ import socket
 import netifaces as ni
 
 target_payload = b""
+send_payload = b""
 received = False
 
 def handle_packet(packet):
@@ -13,11 +14,9 @@ def handle_packet(packet):
         dst_ip = packet[IP].dst
         src_port = packet[UDP].sport
         dst_port = packet[UDP].dport
-        payload = bytes(packet[UDP].payload)
         print(f"{src_ip}:{src_port} → {dst_ip}:{dst_port}")
-        print(f"Payload: {payload}")
 
-        response = IP(dst=src_ip) / UDP(sport=dst_port, dport=src_port) / Raw(load=payload)
+        response = IP(dst=src_ip) / UDP(sport=dst_port, dport=src_port) / Raw(load=send_payload)
         send(response, verbose=False)
 
 
@@ -26,12 +25,14 @@ def handle_packet(packet):
 def server():
     parser = argparse.ArgumentParser(description="Listen to UDP packets using Scapy.")
     parser.add_argument("-i", "--interface", default="eth0", help="Interface to listen to")
-    parser.add_argument("-d", "--data", default="Hello from pingmaster", help="Payload/message to listen to")
+    parser.add_argument("-l", "--listen-data", default="Hello from pingmaster", help="Payload/message to listen to")
+    parser.add_argument("-l", "--data", default="Hello from pingmaster", help="Payload/message to send")
     args = parser.parse_args()
-    global target_payload
-    target_payload = bytes(args.data, "utf-8")
-    print(socket.gethostbyname(socket.gethostname()))
-    sniff(iface=args.interface, filter=f"udp and dst host {ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']}", prn=handle_packet, store=False)
+    global target_payload, send_payload
+    target_payload = bytes(args.listen_data, "utf-8")
+    send_payload = bytes(args.data, "utf-8")
+
+    sniff(iface=args.interface, filter=f"udp and dst host {ni.ifaddresses(args.interface)[ni.AF_INET][0]['addr']}", prn=handle_packet, store=False)
 
 def client():
     parser = argparse.ArgumentParser(description="Send UDP packets using Scapy.")
