@@ -7,6 +7,7 @@ import time
 target_payload = b""
 
 def handle_packet(packet):
+    print(bytes(packet[UDP].payload))
     if UDP in packet and bytes(packet[UDP].payload) in target_payload:
         print(f"{packet[IP].src}:{packet[UDP].sport} → {packet[IP].dst}:{packet[UDP].dport}")
         print(f"Payload: {bytes(packet[UDP].payload)}")
