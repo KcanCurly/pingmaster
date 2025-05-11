@@ -29,7 +29,7 @@ def server():
     parser = argparse.ArgumentParser(description="Listen to UDP packets using Scapy.")
     parser.add_argument("-d", "--data", default="Hello from pingmaster", help="Payload/message to listen to")
     args = parser.parse_args()
-    sniff(filter="udp", prn=create_handler(bytes(args.data)), store=False)
+    sniff(filter="udp", prn=create_handler(bytes(args.data, "utf-8")), store=False)
 
 def client():
     parser = argparse.ArgumentParser(description="Send UDP packets using Scapy.")
