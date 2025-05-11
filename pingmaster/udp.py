@@ -12,7 +12,7 @@ def server():
 
 def client():
     parser = argparse.ArgumentParser(description="Send UDP packets using Scapy.")
-    parser.add_argument("-d", "--dst", required=True, help="Destination IP address")
+    parser.add_argument("-t", "--target", required=True, help="Destination IP address")
     parser.add_argument("-s", "--start-port", type=int, required=True, help="Start of destination port range")
     parser.add_argument("-e", "--end-port", type=int, required=True, help="End of destination port range")
     parser.add_argument("-d", "--data", default="Hello from Scapy", help="Payload/message to send")
@@ -23,5 +23,5 @@ def client():
     payload = args.message.encode()
 
     for dst_port in range(args.start_port, args.end_port + 1):
-        packet = IP(dst=args.dst) / UDP(dport=dst_port, sport=44444) / payload
+        packet = IP(dst=args.target) / UDP(dport=dst_port, sport=44444) / payload
         send(packet)
