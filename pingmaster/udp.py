@@ -29,6 +29,7 @@ def server():
     args = parser.parse_args()
     global target_payload
     target_payload = bytes(args.data, "utf-8")
+    print(socket.gethostbyname(socket.gethostname()))
     sniff(iface=args.interface, filter=f"udp and dst host {socket.gethostbyname(socket.gethostname())}", prn=handle_packet, store=False)
 
 def client():
