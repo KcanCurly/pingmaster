@@ -5,12 +5,23 @@ import socket
 import time
 
 target_payload = b""
+received = False
+
 
 def handle_packet(packet):
-    print(bytes(packet[UDP].payload))
     if UDP in packet and bytes(packet[UDP].payload) in target_payload:
-        print(f"{packet[IP].src}:{packet[UDP].sport} → {packet[IP].dst}:{packet[UDP].dport}")
-        print(f"Payload: {bytes(packet[UDP].payload)}")
+        src_ip = packet[IP].src
+        dst_ip = packet[IP].dst
+        src_port = packet[UDP].sport
+        dst_port = packet[UDP].dport
+        payload = bytes(packet[UDP].payload)
+        print(f"{src_ip}:{src_port} → {dst_ip}:{dst_port}")
+        print(f"Payload: {payload}")
+
+        response = IP(dst=src_ip) / UDP(sport=dst_port, dport=src_port) / Raw(load=payload)
+        send(response, verbose=False)
+
+
 
 
 def server():
