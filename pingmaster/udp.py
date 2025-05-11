@@ -45,7 +45,7 @@ def client():
         sock.settimeout(3)  # Timeout if no reply
 
         # Send to server
-        sock.sendto(args.data, (args.target, dst_port))
+        sock.sendto(bytes(args.data, "utf-8"), (args.target, dst_port))
         print(f"[>] Sent: {args.data}")
 
         # Wait for reply
