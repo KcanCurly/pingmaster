@@ -22,6 +22,8 @@ setup(
     entry_points={
         "console_scripts": [
             "pingmaster=pingmaster.pingmain:main",
+            "pm-udp-server=pingmaster.udp:server",
+            "pm-udp-client=pingmaster.udp:client",
         ],
     },
 )

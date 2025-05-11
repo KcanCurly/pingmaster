@@ -4,11 +4,11 @@ from scapy.layers.inet import IP
 
 def send_safe(target):
     ip_packet = IP(dst=target)
-    send(ip_packet)
+    send(ip_packet, verbose=False)
 
 def send_broken_version_packet(target, version = 1):
     ip_packet = IP(dst=target, version=version) / b"PM_VERSION"
-    send(ip_packet)
+    send(ip_packet, verbose=False)
 
 def send_packets_with_all_tos(target):
     for tos_value in range(256):  # TOS values range from 0 to 255
@@ -21,15 +21,16 @@ def send_packets_with_all_tos(target):
 
 def send_do_not_fragment(target):
     ip_packet = IP(dst=target, flags="DF") / b"PM_DF"
-    send(ip_packet)
+    send(ip_packet, verbose=False)
 
 def main():
-    parser = argparse.ArgumentParser(description="Send a raw IP packet to a target host.")
+    parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
     args = parser.parse_args()
+    target = args.target
 
     # Create a raw IP packet
-    send_safe(args.target)
-    send_broken_version_packet(args.target)
-    send_packets_with_all_tos(args.target)
-    send_do_not_fragment(args.target)
+    send_safe(target)
+    send_broken_version_packet(target)
+    send_packets_with_all_tos(target)
+    send_do_not_fragment(target)
