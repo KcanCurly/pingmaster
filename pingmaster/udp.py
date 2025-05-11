@@ -26,11 +26,12 @@ def server():
     parser = argparse.ArgumentParser(description="Listen to UDP packets using Scapy.")
     parser.add_argument("-i", "--interface", default="eth0", help="Interface to listen to")
     parser.add_argument("-l", "--listen-data", default="Hello from pingmaster", help="Payload/message to listen to")
-    parser.add_argument("-l", "--data", default="Hello from pingmaster", help="Payload/message to send")
+    parser.add_argument("-l", "--data", default="Hello from pingmaster server", help="Payload/message to send")
     args = parser.parse_args()
     global target_payload, send_payload
     target_payload = bytes(args.listen_data, "utf-8")
     send_payload = bytes(args.data, "utf-8")
+    print(f"Server started, going to send '{args.data}' for udp two-way connection testing")
 
     sniff(iface=args.interface, filter=f"udp and dst host {ni.ifaddresses(args.interface)[ni.AF_INET][0]['addr']}", prn=handle_packet, store=False)
 
