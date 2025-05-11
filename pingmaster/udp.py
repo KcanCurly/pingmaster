@@ -13,6 +13,9 @@ def create_handler(target_payload: bytes):
     def handle_packet(packet):
         if UDP in packet:
             payload = bytes(packet[UDP].payload)
+            print(packet[UDP].payload)
+            print(payload)
+            print(target_payload)
             if target_payload in payload:
                 src_ip = packet[IP].src
                 src_port = packet[UDP].sport
