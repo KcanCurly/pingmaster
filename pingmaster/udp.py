@@ -20,7 +20,7 @@ def client():
     args = parser.parse_args()
 
     # Convert payload to bytes
-    payload = args.message.encode()
+    payload = args.data.encode()
 
     for dst_port in range(args.start_port, args.end_port + 1):
         packet = IP(dst=args.target) / UDP(dport=dst_port, sport=44444) / payload
