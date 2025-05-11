@@ -2,11 +2,9 @@ from scapy.all import sniff, send, Raw
 from scapy.layers.inet import IP, UDP
 import argparse
 import socket
-import time
 
 target_payload = b""
 received = False
-
 
 def handle_packet(packet):
     if UDP in packet and bytes(packet[UDP].payload) in target_payload:
@@ -31,7 +29,7 @@ def server():
     args = parser.parse_args()
     global target_payload
     target_payload = bytes(args.data, "utf-8")
-    sniff(iface=args.interface, filter="udp", prn=handle_packet, store=False)
+    sniff(iface=args.interface, filter=f"udp and dst host {socket.gethostbyname(socket.gethostname())}", prn=handle_packet, store=False)
 
 def client():
     parser = argparse.ArgumentParser(description="Send UDP packets using Scapy.")
