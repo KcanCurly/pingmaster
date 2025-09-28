@@ -50,7 +50,7 @@ def main():
     print("===================")
     with ThreadPoolExecutor(max_workers=threads) as executor:
         # TCP S flag test
-        for i in range(1, MAX_PORT+1):
+        for i in range(1, MAX_PORT):
             executor.submit(send_tcp, target, i, "pingmaster", "S")
     now = datetime.now()
     print("===================")

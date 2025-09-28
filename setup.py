@@ -24,6 +24,7 @@ setup(
         "console_scripts": [
             "pm=pingmaster.pingmain:main",
             "pm-listener=pingmaster.listener:main",
+            "pm-analyzer=pingmaster.analyzer:main",
         ],
     },
 )
