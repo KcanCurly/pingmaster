@@ -1,4 +1,5 @@
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 from scapy.all import send
 from scapy.layers.inet import IP
 from pingmaster.tcp import send_tcp
@@ -37,7 +38,7 @@ def main():
     # send_broken_version_packet(target)
     # send_packets_with_all_tos(target)
     # send_do_not_fragment(target)
-
-    # TCP S flag test
-    for i in range(1, 65536+1):
-        send_tcp(target, i, "Hello", "S")
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        # TCP S flag test
+        for i in range(1, 65536+1):
+            executor.submit(send_tcp, i, "Hello", "S")

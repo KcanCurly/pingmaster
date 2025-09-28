@@ -11,4 +11,4 @@ def send_tcp(ip, port, data, flags):
     )
 
     # Send packet
-    send(packet)
+    send(packet, verbose=False)

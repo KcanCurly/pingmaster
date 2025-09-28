@@ -5,15 +5,14 @@ from scapy.layers.inet import IP, TCP
 TARGET_ID = 34443  
 
 def handle_packet(packet):
-    if IP in packet:
-        if packet[IP].id == TARGET_ID:
-            print(f"Matched packet from {packet[IP].src} -> {packet[IP].dst}, ID={packet[IP].id}")
-            if TCP in packet:
-                tcp = packet[TCP]
-                flags = tcp.sprintf("%flags%")
-                print(f"  TCP sport={tcp.sport} dport={tcp.dport} seq={tcp.seq} ack={tcp.ack} flags={flags}")
-                if Raw in packet:
-                    print(f"  payload={bytes(packet[Raw].load)!r}")
+    if IP in packet and packet[IP].id == TARGET_ID:
+        print(f"Matched packet from {packet[IP].src} -> {packet[IP].dst}, ID={packet[IP].id}")
+        if TCP in packet:
+            tcp = packet[TCP]
+            flags = tcp.sprintf("%flags%")
+            print(f"  TCP sport={tcp.sport} dport={tcp.dport} seq={tcp.seq} ack={tcp.ack} flags={flags}")
+            if Raw in packet:
+                print(f"  payload={bytes(packet[Raw].load)!r}")
 
 def main():
     # Listen on a specific interface, e.g., "eth0"
