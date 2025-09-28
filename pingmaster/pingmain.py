@@ -4,6 +4,7 @@ from scapy.all import send
 from scapy.layers.inet import IP
 from pingmaster.tcp import send_tcp
 import time
+from datetime import datetime
 
 def send_safe(target):
     ip_packet = IP(dst=target)
@@ -40,14 +41,18 @@ def main():
     # send_packets_with_all_tos(target)
     # send_do_not_fragment(target)
 
+    now = datetime.now()
     start = time.time()
     print("Starting TCP SYN PING")
+    print("Date:", now)
     print("===================")
     with ThreadPoolExecutor(max_workers=10) as executor:
         # TCP S flag test
         for i in range(1, 65536+1):
             executor.submit(send_tcp, target, i, "Hello", "S")
+    now = datetime.now()
     print("===================")
     print("ENDING TCP SYN PING")
+    print("Date:", now)
     end = time.time()
     print(f"TCP SYN PING took around {end - start:.4f} seconds")
