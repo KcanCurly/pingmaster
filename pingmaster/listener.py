@@ -1,4 +1,5 @@
-from scapy.all import sniff, Raw
+import argparse
+from scapy.all import sniff, Raw, conf
 from scapy.layers.inet import IP, TCP
 import signal
 import sys
@@ -30,7 +31,13 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 def main():
+    parser = argparse.ArgumentParser(description="Listen to interface with scapy.")
+    parser.add_argument("-i", "--interface", default="eth0", help="Target interface (Default: eth0)")
+    args = parser.parse_args()
+
     signal.signal(signal.SIGINT, signal_handler)
 
+    conf.layers.filter([IP])
+
     # Listen on a specific interface, e.g., "eth0"
-    sniff(iface="eth0", filter="ip", prn=handle_packet)
+    sniff(iface=args.interface, filter="ip", prn=handle_packet)
