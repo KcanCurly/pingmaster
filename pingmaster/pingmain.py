@@ -32,8 +32,10 @@ MAX_PORT = 65536
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
+    parser.add_argument("-t", "--threads", default=10, help="Amount of threads. (Default: 10)")
     args = parser.parse_args()
     target = args.target
+    threads = args.threads
 
     # Create a raw IP packet
     # send_safe(target)
@@ -46,14 +48,14 @@ def main():
     print("Starting TCP SYN PING")
     print("Date:", now)
     print("===================")
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor(max_workers=threads) as executor:
         # TCP S flag test
         for i in range(1, 65536+1):
-            executor.submit(send_tcp, target, i, "Hello", "S")
+            executor.submit(send_tcp, target, i, "pingmaster", "S")
     now = datetime.now()
     print("===================")
     print("ENDING TCP SYN PING")
     print("Date:", now)
     end = time.time()
-    minutes, seconds = divmod(end - start, 60)
+    minutes, seconds = map(int,divmod(end - start, 60))
     print(f"TCP SYN PING took around {minutes} minutes and {seconds} seconds")
