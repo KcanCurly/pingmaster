@@ -1,3 +1,5 @@
+from itertools import groupby
+
 DIVIDER_SYMBOL = "="
 DIVIDER_COUNT = 15
 
@@ -11,29 +13,12 @@ def create_result(name, ports):
     print()
 
 def compress_ranges(nums):
-    if not nums:
-        return ""
-
-    nums = sorted(nums)  # make sure the list is sorted
+    nums = sorted(set(nums))  # sort and deduplicate
     ranges = []
-    start = prev = nums[0]
-
-    for n in nums[1:]:
-        if n == prev + 1:
-            # still consecutive
-            prev = n
+    for _, group in groupby(enumerate(nums), lambda x: x[0] - x[1]):
+        group = [g[1] for g in group]
+        if len(group) == 1:
+            ranges.append(str(group[0]))
         else:
-            # end of a range
-            if start == prev:
-                ranges.append(f"{start}")
-            else:
-                ranges.append(f"{start}-{prev}")
-            start = prev = n
-
-    # add the last range
-    if start == prev:
-        ranges.append(f"{start}")
-    else:
-        ranges.append(f"{start}-{prev}")
-
+            ranges.append(f"{group[0]}-{group[-1]}")
     return ranges
