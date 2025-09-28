@@ -24,7 +24,7 @@ def signal_handler(sig, frame):
     print("\n")
     print("You pressed Ctrl+C!")
     print("Results:")
-
+    print("len:", len(tcp_syn_succeeded))
     create_result("TCP SYN", compress_ranges(tcp_syn_succeeded))
 
     sys.exit(0)

@@ -4,6 +4,7 @@ DIVIDER_SYMBOL = "="
 DIVIDER_COUNT = 15
 
 def create_result(name, ports):
+    print("len: ")
     print(DIVIDER_SYMBOL * DIVIDER_COUNT)
     print("TEST:", name)
     print(DIVIDER_SYMBOL * DIVIDER_COUNT)
