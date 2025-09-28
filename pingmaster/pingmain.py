@@ -32,7 +32,7 @@ MAX_PORT = 65536
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
-    parser.add_argument("-t", "--threads", default=10, help="Amount of threads. (Default: 10)")
+    parser.add_argument("-t", "--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
     args = parser.parse_args()
     target = args.target
     threads = args.threads
