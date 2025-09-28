@@ -19,11 +19,10 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.12",
+    python_requires=">=3.9",
     entry_points={
         "console_scripts": [
             "pm=pingmaster.pingmain:main",
-            "pm-listener=pingmaster.listener:main",
             "pm-analyzer=pingmaster.analyzer:main",
         ],
     },
