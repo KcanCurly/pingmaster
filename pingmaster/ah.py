@@ -8,7 +8,7 @@ def send(ip, data):
     # Craft TCP packet
     packet = (
         IP(dst=ip, id=34443) /
-        AH(spi=0x100, seq=1, authdata=b"\x00" * 12) /
+        AH(spi=0x100, seq=1) /
         Raw(load=b)
     )
 
