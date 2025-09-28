@@ -41,4 +41,4 @@ def main():
     with ThreadPoolExecutor(max_workers=10) as executor:
         # TCP S flag test
         for i in range(1, 65536+1):
-            executor.submit(send_tcp, i, "Hello", "S")
+            executor.submit(send_tcp, target, i, "Hello", "S")
