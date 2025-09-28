@@ -2,7 +2,7 @@ from scapy.all import sniff, Raw
 from scapy.layers.inet import IP, TCP
 import signal
 import sys
-from pingmaster.utility import compress_ranges
+from pingmaster.utility import compress_ranges, create_result
 
 # The unique IP ID you want to filter
 TARGET_ID = 34443
@@ -23,9 +23,10 @@ def handle_packet(packet):
 def signal_handler(sig, frame):
     print("\n")
     print("You pressed Ctrl+C!")
-    print("Results")
+    print("Results:")
 
-    print(compress_ranges(tcp_syn_succeeded))
+    create_result("TCP SYN", compress_ranges(tcp_syn_succeeded))
+
     sys.exit(0)
 
 def main():

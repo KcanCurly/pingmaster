@@ -1,3 +1,15 @@
+DIVIDER_SYMBOL = "="
+DIVIDER_COUNT = 15
+
+def create_result(name, ports):
+    print(DIVIDER_SYMBOL * DIVIDER_COUNT)
+    print("TEST:", name)
+    print(DIVIDER_SYMBOL * DIVIDER_COUNT)
+    print("Ports succeeded:")
+    for port in ports:
+        print(f"    {port}")
+    print()
+
 def compress_ranges(nums):
     if not nums:
         return ""
@@ -24,4 +36,4 @@ def compress_ranges(nums):
     else:
         ranges.append(f"{start}-{prev}")
 
-    return ", ".join(ranges)
+    return ranges

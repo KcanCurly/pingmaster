@@ -2,7 +2,7 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 from scapy.all import send
 from scapy.layers.inet import IP
-from pingmaster.tcp import send_tcp
+from pingmaster.tcp import send as send_tcp
 import time
 from datetime import datetime
 
@@ -50,7 +50,7 @@ def main():
     print("===================")
     with ThreadPoolExecutor(max_workers=threads) as executor:
         # TCP S flag test
-        for i in range(1, 65536+1):
+        for i in range(1, MAX_PORT+1):
             executor.submit(send_tcp, target, i, "pingmaster", "S")
     now = datetime.now()
     print("===================")

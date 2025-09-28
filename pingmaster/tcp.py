@@ -1,7 +1,8 @@
-from scapy.all import Raw, send
+from scapy.all import Raw
+from scapy.all import send as scapy_send
 from scapy.layers.inet import IP, TCP
 
-def send_tcp(ip, port, data, flags):
+def send(ip, port, data, flags):
     b = data.encode("utf-8", errors="replace")
     # Craft TCP packet
     packet = (
@@ -11,4 +12,4 @@ def send_tcp(ip, port, data, flags):
     )
 
     # Send packet
-    send(packet, verbose=False)
+    scapy_send(packet, verbose=False)
