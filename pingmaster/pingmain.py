@@ -24,6 +24,8 @@ def send_do_not_fragment(target):
     ip_packet = IP(dst=target, flags="DF") / b"PM_DF"
     send(ip_packet, verbose=False)
 
+MAX_PORT = 65536
+
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
@@ -36,5 +38,6 @@ def main():
     # send_packets_with_all_tos(target)
     # send_do_not_fragment(target)
 
-    for i in range(1, 10):
+    # TCP S flag test
+    for i in range(1, 65536+1):
         send_tcp(target, i, "Hello", "S")

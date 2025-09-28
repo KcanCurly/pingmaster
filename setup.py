@@ -22,8 +22,7 @@ setup(
     python_requires=">=3.12",
     entry_points={
         "console_scripts": [
-            "pingmaster=pingmaster.pingmain:main",
-            "pm-udp-server=pingmaster.udp:server",
+            "pm=pingmaster.pingmain:main",
             "pm-listener=pingmaster.listener:main",
         ],
     },
