@@ -37,7 +37,7 @@ def main():
 
     signal.signal(signal.SIGINT, signal_handler)
 
-    conf.layers.filter([IP])
+    conf.layers.filter([IP, TCP])
 
     # Listen on a specific interface, e.g., "eth0"
     sniff(iface=args.interface, filter="ip", prn=handle_packet)
