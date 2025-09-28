@@ -1,6 +1,7 @@
 import argparse
 from scapy.all import send
 from scapy.layers.inet import IP
+from pingmaster.tcp import send_tcp
 
 def send_safe(target):
     ip_packet = IP(dst=target)
@@ -30,7 +31,10 @@ def main():
     target = args.target
 
     # Create a raw IP packet
-    send_safe(target)
-    send_broken_version_packet(target)
-    send_packets_with_all_tos(target)
-    send_do_not_fragment(target)
+    # send_safe(target)
+    # send_broken_version_packet(target)
+    # send_packets_with_all_tos(target)
+    # send_do_not_fragment(target)
+
+    for i in range(1, 10):
+        send_tcp(target, i, "Hello", "S")

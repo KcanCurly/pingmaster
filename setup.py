@@ -24,7 +24,7 @@ setup(
         "console_scripts": [
             "pingmaster=pingmaster.pingmain:main",
             "pm-udp-server=pingmaster.udp:server",
-            "pm-udp-client=pingmaster.udp:client",
+            "pm-listener=pingmaster.listener:main",
         ],
     },
 )
