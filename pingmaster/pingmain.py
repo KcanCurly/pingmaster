@@ -55,4 +55,5 @@ def main():
     print("ENDING TCP SYN PING")
     print("Date:", now)
     end = time.time()
-    print(f"TCP SYN PING took around {end - start:.4f} seconds")
+    minutes, seconds = divmod(end - start, 60)
+    print(f"TCP SYN PING took around {minutes} minutes and {seconds} seconds")

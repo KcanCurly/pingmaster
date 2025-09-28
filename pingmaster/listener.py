@@ -20,6 +20,7 @@ def handle_packet(packet):
                 #print(f"  payload={bytes(packet[Raw].load)!r}")
 
 def signal_handler(sig, frame):
+    print("\n")
     print("You pressed Ctrl+C!")
     print("Results")
     print(tcp_syn_succeeded)
