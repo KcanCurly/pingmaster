@@ -9,6 +9,7 @@ tshark -i INTERFACE -f "ip[4:2] == ID" -w pingmaster.pcap
 
 # On client
 ```bash
+sudo apt install python3-dev
 pipx install "git+https://github.com/kcancurly/pingmaster" 
 pm IP
 ```

@@ -2,10 +2,12 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 from pingmaster.tcp import send as send_tcp
 from pingmaster.udp import send as send_udp
+from pingmaster.icmp import send as send_icmp
 import time
 from datetime import datetime
 
 MAX_PORT = 65536
+MAX_ICMP_TYPES = 256
 
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
@@ -48,3 +50,21 @@ def main():
     end = time.time()
     minutes, seconds = map(int,divmod(end - start, 60))
     print(f"UDP PING took around {minutes} minutes and {seconds} seconds")
+
+    now = datetime.now()
+    start = time.time()
+    print("Starting ICMP PING")
+    print("Date:", now)
+    print("===================")
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        # TCP S flag test
+        for i in range(1, MAX_ICMP_TYPES):
+            executor.submit(send_icmp, target, i, "pingmaster")
+    now = datetime.now()
+    print("===================")
+    print("ENDING ICMP PING")
+    print("Date:", now)
+    end = time.time()
+    minutes, seconds = map(int,divmod(end - start, 60))
+    print(f"ICMP PING took around {minutes} minutes and {seconds} seconds")
+
