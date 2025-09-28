@@ -1,5 +1,7 @@
 from scapy.all import sniff, Raw
 from scapy.layers.inet import IP, TCP
+import signal
+import sys
 
 # The unique IP ID you want to filter
 TARGET_ID = 34443
@@ -17,10 +19,14 @@ def handle_packet(packet):
             # if Raw in packet:
                 #print(f"  payload={bytes(packet[Raw].load)!r}")
 
+def signal_handler(sig, frame):
+    print("You pressed Ctrl+C!")
+    print("Results")
+    print(tcp_syn_succeeded)
+    sys.exit(0)
+
 def main():
+    signal.signal(signal.SIGINT, signal_handler)
+
     # Listen on a specific interface, e.g., "eth0"
-    try:
-        sniff(iface="eth0", filter="ip", prn=handle_packet)
-    except KeyboardInterrupt:
-        print("\nCTRL+C detected! Results:")
-        print(tcp_syn_succeeded)
+    sniff(iface="eth0", filter="ip", prn=handle_packet)
