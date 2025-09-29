@@ -9,6 +9,7 @@ from pingmaster.esp import send as send_esp
 from pingmaster.gre import send as send_gre
 from pingmaster.igmp import send as send_igmp
 from pingmaster.pim import send as send_pim
+from pingmaster.ospf import send as send_ospf
 import time
 from datetime import datetime
 
@@ -21,6 +22,7 @@ class PingTypes(Enum):
     GRE = "GRE"
     IGMP = "IGMP"
     PIM = "PIM"
+    OSPF = "OSPF"
 
 MAX_PORT = 65536
 MAX_ICMP_TYPES = 256
@@ -102,6 +104,12 @@ def test_pim(target, threads, data):
         executor.submit(send_pim, target, data)
     test_text_post("PIM PING")
 
+def test_ospf(target, threads, data):
+    test_text_pre("OSPF PING")
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        executor.submit(send_ospf, target, data)
+    test_text_post("OSPF PING")
+
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
@@ -130,6 +138,8 @@ def main():
             test_igmp(target, threads, data)
         elif args.method == PingTypes.PIM:
             test_pim(target, threads, data)
+        elif args.method == PingTypes.OSPF:
+            test_ospf(target, threads, data)
 
     else:
         test_tcp(target, threads)
