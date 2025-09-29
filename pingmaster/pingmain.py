@@ -7,6 +7,7 @@ from pingmaster.icmp import send as send_icmp
 from pingmaster.ah import send as send_ah
 from pingmaster.esp import send as send_esp
 from pingmaster.gre import send as send_gre
+from pingmaster.igmp import send as send_igmp
 import time
 from datetime import datetime
 
@@ -17,111 +18,81 @@ class PingTypes(Enum):
     AH = "AH"
     ESP = "ESP"
     GRE = "GRE"
+    IGMP = "IGMP"
 
 MAX_PORT = 65536
 MAX_ICMP_TYPES = 256
 
-def test_tcp(target, threads):
+start = None
+end = None
+
+def test_text_pre(name):
     now = datetime.now()
+    global start
     start = time.time()
-    print("Starting TCP SYN PING")
+    print("Starting", name)
     print("Date:", now)
     print("===================")
+
+def test_text_post(name):
+    now = datetime.now()
+    print("===================")
+    print("ENDING", name)
+    print("Date:", now)
+    global start, end
+    end = time.time()
+    minutes, seconds = map(int,divmod(end - start, 60))
+    print(f"{name} took around {minutes} minutes and {seconds} seconds")
+
+def test_tcp(target, threads):
+    test_text_pre("TCP PING")
+
     with ThreadPoolExecutor(max_workers=threads) as executor:
         # TCP S flag test
         for i in range(1, MAX_PORT):
             executor.submit(send_tcp, target, i, "pingmaster", "S")
-    now = datetime.now()
-    print("===================")
-    print("ENDING TCP SYN PING")
-    print("Date:", now)
-    end = time.time()
-    minutes, seconds = map(int,divmod(end - start, 60))
-    print(f"TCP SYN PING took around {minutes} minutes and {seconds} seconds")
+
+    test_text_post("TCP PING")
 
 def test_udp(target, threads):
-    now = datetime.now()
-    start = time.time()
-    print("Starting UDP PING")
-    print("Date:", now)
-    print("===================")
+    test_text_pre("UDP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
         # TCP S flag test
         for i in range(1, MAX_PORT):
             executor.submit(send_udp, target, i, "pingmaster")
-    now = datetime.now()
-    print("===================")
-    print("ENDING UDP PING")
-    print("Date:", now)
-    end = time.time()
-    minutes, seconds = map(int,divmod(end - start, 60))
-    print(f"UDP PING took around {minutes} minutes and {seconds} seconds")
+    test_text_post("UDP PING")
 
 def test_icmp(target, threads):
-    now = datetime.now()
-    start = time.time()
-    print("Starting ICMP PING")
-    print("Date:", now)
-    print("===================")
+    test_text_pre("ICMP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
         # TCP S flag test
         for i in range(1, MAX_ICMP_TYPES):
             executor.submit(send_icmp, target, i, "pingmaster")
-    now = datetime.now()
-    print("===================")
-    print("ENDING ICMP PING")
-    print("Date:", now)
-    end = time.time()
-    minutes, seconds = map(int,divmod(end - start, 60))
-    print(f"ICMP PING took around {minutes} minutes and {seconds} seconds")
+    test_text_post("ICMP PING")
 
 def test_ah(target, threads):
-    now = datetime.now()
-    start = time.time()
-    print("Starting AH PING")
-    print("Date:", now)
-    print("===================")
+    test_text_pre("AH PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
         executor.submit(send_ah, target, "pingmaster")
-    now = datetime.now()
-    print("===================")
-    print("ENDING AH PING")
-    print("Date:", now)
-    end = time.time()
-    minutes, seconds = map(int,divmod(end - start, 60))
-    print(f"ICMP AH took around {minutes} minutes and {seconds} seconds")
+    test_text_post("AH PING")
 
 def test_esp(target, threads):
-    now = datetime.now()
-    start = time.time()
-    print("Starting ESP PING")
-    print("Date:", now)
-    print("===================")
+    test_text_pre("ESP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
         executor.submit(send_esp, target, "pingmaster")
-    now = datetime.now()
-    print("===================")
-    print("ENDING ESP PING")
-    print("Date:", now)
-    end = time.time()
-    minutes, seconds = map(int,divmod(end - start, 60))
-    print(f"ICMP ESP took around {minutes} minutes and {seconds} seconds")
+    test_text_post("ESP PING")
 
 def test_gre(target, threads):
-    now = datetime.now()
-    start = time.time()
-    print("Starting GRE PING")
-    print("Date:", now)
-    print("===================")
+    test_text_pre("GRE PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
         executor.submit(send_gre, target, "pingmaster")
-    now = datetime.now()
-    print("===================")
-    print("ENDING GRE PING")
-    print("Date:", now)
-    end = time.time()
-    minutes, seconds = map(int,divmod(end - start, 60))
-    print(f"ICMP GRE took around {minutes} minutes and {seconds} seconds")
+    test_text_post("GRE PING")
+
+def test_igmp(target, threads):
+    test_text_pre("IGMP PING")
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        executor.submit(send_igmp, target, "pingmaster")
+    test_text_post("IGMP PING")
 
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
@@ -145,6 +116,8 @@ def main():
             test_esp(target, threads)
         elif args.method == PingTypes.GRE:
             test_gre(target, threads)
+        elif args.method == PingTypes.IGMP:
+            test_igmp(target, threads)
 
     else:
         test_tcp(target, threads)
