@@ -8,6 +8,7 @@ from pingmaster.ah import send as send_ah
 from pingmaster.esp import send as send_esp
 from pingmaster.gre import send as send_gre
 from pingmaster.igmp import send as send_igmp
+from pingmaster.pim import send as send_pim
 import time
 from datetime import datetime
 
@@ -19,6 +20,7 @@ class PingTypes(Enum):
     ESP = "ESP"
     GRE = "GRE"
     IGMP = "IGMP"
+    PIM = "PIM"
 
 MAX_PORT = 65536
 MAX_ICMP_TYPES = 256
@@ -94,6 +96,12 @@ def test_igmp(target, threads):
         executor.submit(send_igmp, target, "pingmaster")
     test_text_post("IGMP PING")
 
+def test_igmp(target, threads):
+    test_text_pre("PIM PING")
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        executor.submit(send_igmp, target, "pingmaster")
+    test_text_post("PIM PING")
+
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
@@ -117,6 +125,8 @@ def main():
         elif args.method == PingTypes.GRE:
             test_gre(target, threads)
         elif args.method == PingTypes.IGMP:
+            test_igmp(target, threads)
+        elif args.method == PingTypes.PIM:
             test_igmp(target, threads)
 
     else:
