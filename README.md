@@ -1,4 +1,17 @@
-This project is to send all kinds of pings to test for tunnel and data exfil tests
+This project is to send all kinds of packets to test for tunnel and data exfil
+
+# Implemented Protocols
+- TCP
+- UDP
+- SCTP
+- ICMP
+- AH
+- ESP
+- GRE
+- IGMP
+- PIM
+- OSPF
+- CARP
 
 # On server
 ```bash
