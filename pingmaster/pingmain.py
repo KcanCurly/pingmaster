@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from enum import Enum
 from pingmaster.tcp import send as send_tcp
 from pingmaster.udp import send as send_udp
+from pingmaster.sctp import send as send_sctp
 from pingmaster.icmp import send as send_icmp
 from pingmaster.ah import send as send_ah
 from pingmaster.esp import send as send_esp
@@ -23,6 +24,7 @@ class PingTypes(Enum):
     IGMP = "IGMP"
     PIM = "PIM"
     OSPF = "OSPF"
+    SCTP = "SCTP"
 
 MAX_PORT = 65536
 MAX_ICMP_TYPES = 256
@@ -50,9 +52,8 @@ def test_text_post(name):
 
 def test_tcp(target, threads, data):
     test_text_pre("TCP PING")
-
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        # TCP S flag test
+
         for i in range(1, MAX_PORT):
             executor.submit(send_tcp, target, i, data, "S")
 
@@ -61,15 +62,20 @@ def test_tcp(target, threads, data):
 def test_udp(target, threads, data):
     test_text_pre("UDP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        # TCP S flag test
         for i in range(1, MAX_PORT):
             executor.submit(send_udp, target, i, data)
     test_text_post("UDP PING")
 
+def test_sctp(target, threads, data):
+    test_text_pre("SCTP PING")
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        for i in range(1, MAX_PORT):
+            executor.submit(send_sctp, target, i, data)
+    test_text_post("SCTP PING")
+
 def test_icmp(target, threads, data):
     test_text_pre("ICMP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        # TCP S flag test
         for i in range(1, MAX_ICMP_TYPES):
             executor.submit(send_icmp, target, i, data)
     test_text_post("ICMP PING")
@@ -140,6 +146,8 @@ def main():
             test_pim(target, threads, data)
         elif args.method == PingTypes.OSPF:
             test_ospf(target, threads, data)
+        elif args.method == PingTypes.SCTP:
+            test_sctp(target, threads, data)
 
     else:
         test_tcp(target, threads)
