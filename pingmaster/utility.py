@@ -29,6 +29,8 @@ def create_result_for_icmp(name, types):
     print()
 
 def compress_ranges(nums):
+    if not nums:
+        return []
     nums = sorted(set(nums))  # sort and deduplicate
     ranges = []
     for _, group in groupby(enumerate(nums), lambda x: x[0] - x[1]):

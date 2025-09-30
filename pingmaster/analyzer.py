@@ -66,7 +66,7 @@ def main():
     create_result("TCP", compress_ranges(tcp_list))
     create_result("UDP", compress_ranges(udp_list))
     create_result("SCTP", compress_ranges(sctp_list))
-    create_result_for_icmp("ICMP", icmp_list)
+    create_result_for_icmp("ICMP", compress_ranges(icmp_list))
     create_result_single("ESP", esp_s)
     create_result_single("AH", ah_s)
     create_result_single("CARP", carp_s)

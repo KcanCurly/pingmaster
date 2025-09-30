@@ -44,42 +44,42 @@ def test_text_pre(name):
 
 def test_text_post(name):
     now = datetime.now()
-    print("===================")
     print("ENDING", name)
     print("Date:", now)
     global start, end
     end = time.time()
     minutes, seconds = map(int,divmod(end - start, 60))
     print(f"{name} took around {minutes} minutes and {seconds} seconds")
+    print("===================")
 
 def test_tcp(target, threads, data):
     test_text_pre("TCP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
 
-        for i in range(1, MAX_PORT):
-            executor.submit(send_tcp, target, i, data, "S")
+        for port in range(1, MAX_PORT):
+            executor.submit(send_tcp, target, port, data, "S")
 
     test_text_post("TCP PING")
 
 def test_udp(target, threads, data):
     test_text_pre("UDP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        for i in range(1, MAX_PORT):
-            executor.submit(send_udp, target, i, data)
+        for port in range(1, MAX_PORT):
+            executor.submit(send_udp, target, port, data)
     test_text_post("UDP PING")
 
 def test_sctp(target, threads, data):
     test_text_pre("SCTP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        for i in range(1, MAX_PORT):
-            executor.submit(send_sctp, target, i, data)
+        for port in range(1, MAX_PORT):
+            executor.submit(send_sctp, target, port, data)
     test_text_post("SCTP PING")
 
 def test_icmp(target, threads, data):
     test_text_pre("ICMP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        for i in range(1, MAX_ICMP_TYPES):
-            executor.submit(send_icmp, target, i, data)
+        for port in range(1, MAX_ICMP_TYPES):
+            executor.submit(send_icmp, target, port, data)
     test_text_post("ICMP PING")
 
 def test_ah(target, threads, data):

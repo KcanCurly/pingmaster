@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name="pingmaster",
-    version="0.0.1",
-    description="Ping things",
+    version="1.0.0",
+    description="Ping protocols to test firewall rules",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="kcancurly",
@@ -13,11 +13,6 @@ setup(
     install_requires=[
         "scapy",
         "netifaces"
-    ],
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
     ],
     python_requires=">=3.9",
     entry_points={
