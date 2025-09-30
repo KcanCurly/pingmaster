@@ -11,6 +11,7 @@ from pingmaster.gre import send as send_gre
 from pingmaster.igmp import send as send_igmp
 from pingmaster.pim import send as send_pim
 from pingmaster.ospf import send as send_ospf
+from pingmaster.carp import send as send_carp
 import time
 from datetime import datetime
 
@@ -25,6 +26,7 @@ class PingTypes(Enum):
     PIM = "PIM"
     OSPF = "OSPF"
     SCTP = "SCTP"
+    CARP = "CARP"
 
 MAX_PORT = 65536
 MAX_ICMP_TYPES = 256
@@ -116,6 +118,12 @@ def test_ospf(target, threads, data):
         executor.submit(send_ospf, target, data)
     test_text_post("OSPF PING")
 
+def test_carp(target, threads, data):
+    test_text_pre("CARP PING")
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        executor.submit(send_carp, target, data)
+    test_text_post("CARP PING")
+
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
@@ -148,10 +156,19 @@ def main():
             test_ospf(target, threads, data)
         elif args.method == PingTypes.SCTP:
             test_sctp(target, threads, data)
+        elif args.method == PingTypes.CARP:
+            test_carp(target, threads, data)
 
     else:
         test_tcp(target, threads)
         test_udp(target, threads)
+        test_sctp(target, threads)
         test_icmp(target, threads)
         test_ah(target, threads)
         test_esp(target, threads)
+        test_gre(target, threads)
+        test_igmp(target, threads)
+        test_pim(target, threads)
+        test_ospf(target, threads)
+        test_carp(target, threads)
+

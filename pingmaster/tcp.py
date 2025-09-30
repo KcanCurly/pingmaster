@@ -7,7 +7,7 @@ def send(ip, port, data, flags):
     # Craft TCP packet
     packet = (
         IP(dst=ip, id=34443) /
-        TCP(dport=port, sport=44444, flags=flags, seq=1000, ack=1) /
+        TCP(dport=port, sport=44444, flags=flags) /
         Raw(load=b)
     )
 
