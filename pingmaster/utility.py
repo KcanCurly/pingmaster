@@ -12,6 +12,22 @@ def create_result(name, ports):
         print(f"    {port}")
     print()
 
+def create_result_single(name, b):
+    print(DIVIDER_SYMBOL * DIVIDER_COUNT)
+    print("TEST:", name)
+    print(DIVIDER_SYMBOL * DIVIDER_COUNT)
+    print("Succes:", b)
+    print()
+
+def create_result_for_icmp(name, types):
+    print(DIVIDER_SYMBOL * DIVIDER_COUNT)
+    print("TEST:", name)
+    print(DIVIDER_SYMBOL * DIVIDER_COUNT)
+    print("Types succeeded:")
+    for type in types:
+        print(f"    {type}")
+    print()
+
 def compress_ranges(nums):
     nums = sorted(set(nums))  # sort and deduplicate
     ranges = []

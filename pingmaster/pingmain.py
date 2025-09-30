@@ -128,7 +128,7 @@ def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("target", help="Target IP address or hostname")
     parser.add_argument("-t", "--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
-    parser.add_argument("-m", "--method", required=False, type= PingTypes, choices=list(PingTypes))
+    parser.add_argument("-m", "--method", required=False, type= PingTypes, choices=[m.value for m in PingTypes])
     parser.add_argument("-d", "--data", type=str, default="pingmaster", help="Data to send. (Default: pingmaster)")
     args = parser.parse_args()
     target = args.target

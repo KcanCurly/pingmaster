@@ -1,23 +1,57 @@
 import argparse
 from scapy.all import rdpcap
-from scapy.layers.inet import IP, TCP
-from pingmaster.utility import compress_ranges, create_result
+from scapy.layers.inet import IP, TCP, UDP, ICMP
+from scapy.layers.sctp import SCTP
+from scapy.layers.ipsec import AH, ESP
+from scapy.contrib.carp import CARP
+from scapy.contrib.igmp import IGMP
+from scapy.contrib.ospf import OSPF_Hdr
+from scapy.contrib.pim import PIMv2Hdr
+from pingmaster.utility import compress_ranges, create_result, create_result_single, create_result_for_icmp
 
 # The unique IP ID you want to filter
 TARGET_ID = 34443
 
-tcp_syn_succeeded = []
+tcp_list = []
+udp_list = []
+sctp_list = []
+icmp_list = []
+ah_s = False
+carp_s = False
+esp_s = False
+gre_s = False
+igmp_s = False
+ospf_s = False
+pim_s = False
 
 def handle_packet(packet):
+    global ah_s, carp_s, esp_s, gre_s, igmp_s, ospf_s, pim_s
     if IP in packet and packet[IP].id == TARGET_ID:
-        # print(f"Matched packet from {packet[IP].src} -> {packet[IP].dst}, ID={packet[IP].id}")
         if TCP in packet:
             tcp = packet[TCP]
-            flags = tcp.sprintf("%flags%")
-            tcp_syn_succeeded.append(tcp.dport)
-            # print(f"  TCP sport={tcp.sport} dport={tcp.dport} seq={tcp.seq} ack={tcp.ack} flags={flags}")
-            # if Raw in packet:
-                # print(f"  payload={bytes(packet[Raw].load)!r}")
+            tcp_list.append(tcp.dport)
+        elif UDP in packet:
+            udp = packet[UDP]
+            udp_list.append(udp.dport)
+        elif SCTP in packet:
+            sctp = packet[SCTP]
+            sctp_list.append(sctp.dport)
+        elif ICMP in packet:
+            icmp = packet[ICMP]
+            icmp_list.append(icmp.type)
+        elif ESP in packet:
+            esp_s = True
+        elif AH in packet:
+            ah_s = True
+        elif CARP in packet:
+            carp_s = True
+        elif IGMP in packet:
+            igmp_s = True
+        elif OSPF_Hdr in packet:
+            ospf_s = True
+        elif PIMv2Hdr in packet:
+            pim_s = True
+
 
 def analyze(file):
     pkts = rdpcap(file)
@@ -29,4 +63,14 @@ def main():
     parser.add_argument("file", help="Target filename")
     args = parser.parse_args()
     analyze(args.file)
-    create_result("TCP SYN", compress_ranges(tcp_syn_succeeded))
+    create_result("TCP", compress_ranges(tcp_list))
+    create_result("UDP", compress_ranges(udp_list))
+    create_result("SCTP", compress_ranges(sctp_list))
+    create_result_for_icmp("ICMP", icmp_list)
+    create_result_single("ESP", esp_s)
+    create_result_single("AH", ah_s)
+    create_result_single("CARP", carp_s)
+    create_result_single("GRE", gre_s)
+    create_result_single("IGMP", igmp_s)
+    create_result_single("OSPF", ospf_s)
+    create_result_single("PIM", pim_s)
