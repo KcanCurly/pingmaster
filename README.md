@@ -1,10 +1,10 @@
 This project is to send all kinds of pings to test for tunnel and data exfil tests
 
 # On server
-We use tshark to capture the IP packets with given ID on given interface
 ```bash
 sudo apt install tshark
-tshark -i INTERFACE -f "ip[4:2] == ID" -w pingmaster.pcap # Press Ctrl+C when finished
+pipx install "git+https://github.com/kcancurly/pingmaster" 
+tshark -i eth0 -f "ip[4:2] == 34443" -w pingmaster.pcap # Press Ctrl+C when finished
 pm-analyzer pingmaster.pcap
 ```
 
