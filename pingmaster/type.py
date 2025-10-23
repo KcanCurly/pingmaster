@@ -5,8 +5,10 @@ class PingType:
         self.data = data.encode("utf-8", errors="replace")
 
     def send(self, executor):
-        self.send_IPv4(executor)
-        self.send_IPv6(executor)
+        if self.IPv4_host:
+            self.send_IPv4(executor)
+        if self.IPv6_host:
+            self.send_IPv6(executor)
 
     def send_IPv4(self, executor):
         pass
