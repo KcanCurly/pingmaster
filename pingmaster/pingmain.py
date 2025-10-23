@@ -141,9 +141,6 @@ def main():
     threads = args.threads
     data = args.data
 
-    conf.iface = "eth0"
-    conf.ipv6_enabled = True
-
     if os.geteuid() != 0:
         print("Run as root, exiting")
 

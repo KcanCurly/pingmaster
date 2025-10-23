@@ -18,7 +18,7 @@ class ICMP_Type(PingType):
     def _send_IPv6(self, target, data, t):
 
         packet = (
-            IPv6(dst=target, id=34443) /
+            IPv6(dst=target, fl=34443) /
             ICMPv6EchoRequest() /
             Raw(load=data)
         )
