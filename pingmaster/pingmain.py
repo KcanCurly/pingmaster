@@ -15,7 +15,7 @@ from pingmaster.carp import send as send_carp
 import time
 from datetime import datetime
 import os
-import sys
+from scapy.arch import conf
 
 # Src ports: 53, 80, 135, 443, 50000
 
@@ -140,6 +140,9 @@ def main():
     target = args.target
     threads = args.threads
     data = args.data
+
+    conf.iface = "eth0"
+    conf.ipv6_enabled = True
 
     if os.geteuid() != 0:
         print("Run as root, exiting")
