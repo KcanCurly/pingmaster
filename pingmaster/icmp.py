@@ -6,6 +6,7 @@ from pingmaster.type import PingType
 
 class ICMP_Type(PingType):
     def _send_IPv4(target, data, t):
+        print("a", t)
         packet = (
             IP(dst=target, id=34443) /
             ICMP(type=t) /
@@ -15,6 +16,7 @@ class ICMP_Type(PingType):
         scapy_send(packet, verbose=False)
 
     def _send_IPv6(target, data, t):
+        print("b", t)
         packet = (
             IPv6(dst=target, id=34443) /
             _ICMPv6(type=t) /
@@ -25,9 +27,7 @@ class ICMP_Type(PingType):
 
     def send_IPv4(self, executor):
         if executor:
-            print("a")
             for t in range(0, 256):
-                print("a", t)
                 executor.submit(self._send_IPv4, self.IPv4_host, self.data, t)
         else:
             for t in range(0, 256):
@@ -41,9 +41,7 @@ class ICMP_Type(PingType):
 
     def send_IPv6(self, executor):
         if executor:
-            print("b")
             for t in range(0, 256):
-                print("b", t)
                 executor.submit(self._send_IPv6, self.IPv6_host, self.data, t)
         else:
             for t in range(0, 256):
