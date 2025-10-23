@@ -1,15 +1,55 @@
 from scapy.all import Raw
 from scapy.all import send as scapy_send
 from scapy.layers.inet import IP, UDP
+from scapy.layers.inet6 import IPv6
+from pingmaster.type import PingType
 
-def send(ip, port, data):
-    b = data.encode("utf-8", errors="replace")
-    # Craft TCP packet
-    packet = (
-        IP(dst=ip, id=34443) /
-        UDP(dport=port, sport=44444) /
-        Raw(load=b)
-    )
+class UDP_Type(PingType):
+    def _send_IPv4(self, target, data, port):
 
-    # Send packet
-    scapy_send(packet, verbose=False)
+        packet = (
+            IP(dst=target, id=34443) /
+            UDP(dport=port, sport=44444) /
+            Raw(load=data)
+        )
+
+        scapy_send(packet, verbose=False)
+
+    def _send_IPv6(self, target, data, port):
+
+        packet = (
+            IPv6(dst=target, id=34443) /
+            UDP(dport=port, sport=44444) /
+            Raw(load=data)
+        )
+
+        scapy_send(packet, verbose=False)
+
+    def send_IPv4(self, executor):
+        if executor:
+            for port in range(0, 65536):
+                executor.submit(self._send_IPv4, self.IPv4_host, self.data, port)
+        else:
+            for port in range(0, 65536):
+                packet = (
+                    IP(dst=self.IPv4_host, id=34443) /
+                    UDP(dport=port, sport=44444) /
+                    Raw(load=self.data)
+                )
+
+                scapy_send(packet, verbose=False)
+
+    def send_IPv6(self, executor):
+        if executor:
+            for port in range(0, 65536):
+                executor.submit(self._send_IPv6, self.IPv6_host, self.data, port)
+        else:
+            for port in range(0, 65536):
+                packet = (
+                    IPv6(dst=self.IPv6_host, id=34443) /
+                    UDP(dport=port, sport=44444) /
+                    Raw(load=self.data)
+                )
+
+                scapy_send(packet, verbose=False)
+

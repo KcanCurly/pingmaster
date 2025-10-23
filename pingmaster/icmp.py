@@ -46,8 +46,8 @@ class ICMP_Type(PingType):
         else:
             for t in range(0, 256):
                 packet = (
-                    IP(dst=self.IPv6_host, id=34443) /
-                    ICMP(type=t) /
+                    IPv6(dst=self.IPv6_host, fl=34443) /
+                    ICMPv6Unknown(type=t) /
                     Raw(load=self.data)
                 )
 

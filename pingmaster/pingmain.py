@@ -2,7 +2,7 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 from enum import Enum
 from pingmaster.tcp import send as send_tcp
-from pingmaster.udp import send as send_udp
+from pingmaster.udp import UDP_Type
 from pingmaster.sctp import send as send_sctp
 from pingmaster.icmp import ICMP_Type
 from pingmaster.ah import send as send_ah
@@ -15,7 +15,6 @@ from pingmaster.carp import send as send_carp
 import time
 from datetime import datetime
 import os
-from scapy.arch import conf
 
 # Src ports: 53, 80, 135, 443, 50000
 
@@ -65,11 +64,11 @@ def test_tcp(target, threads, data):
 
     test_text_post("TCP PING")
 
-def test_udp(target, threads, data):
+def test_udp(ipv4_target, ipv6_target, threads, data):
     test_text_pre("UDP PING")
+    i = UDP_Type(ipv4_target, ipv6_target, data)
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        for port in range(1, MAX_PORT):
-            executor.submit(send_udp, target, port, data)
+        i.send(executor)
     test_text_post("UDP PING")
 
 def test_sctp(target, threads, data):
@@ -148,7 +147,7 @@ def main():
         if args.method == PingTypes.TCP.value:
             test_tcp(target, threads, data)
         elif args.method == PingTypes.UDP.value:
-            test_udp(target, threads, data)
+            test_udp(args.ipv4_target, args.ipv6_target, threads, data)
         elif args.method == PingTypes.ICMP.value:
             test_icmp(args.ipv4_target, args.ipv6_target, threads, data)
         elif args.method == PingTypes.AH.value:
