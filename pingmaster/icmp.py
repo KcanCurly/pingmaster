@@ -12,7 +12,7 @@ class ICMP_Type(PingType):
             Raw(load=data)
         )
 
-        scapy_send(packet, verbose=False)
+        scapy_send(packet)
 
     def _send_IPv6(target, data, t):
         packet = (
@@ -21,7 +21,7 @@ class ICMP_Type(PingType):
             Raw(load=data)
         )
 
-        scapy_send(packet, verbose=False)
+        scapy_send(packet)
 
     def send_IPv4(self, executor):
         if executor:
