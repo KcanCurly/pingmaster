@@ -4,7 +4,7 @@ from enum import Enum
 from pingmaster.tcp import send as send_tcp
 from pingmaster.udp import send as send_udp
 from pingmaster.sctp import send as send_sctp
-from pingmaster.icmp import send as send_icmp
+from pingmaster.icmp import ICMP_Type
 from pingmaster.ah import send as send_ah
 from pingmaster.esp import send as send_esp
 from pingmaster.gre import send as send_gre
@@ -14,6 +14,8 @@ from pingmaster.ospf import send as send_ospf
 from pingmaster.carp import send as send_carp
 import time
 from datetime import datetime
+
+# Src ports: 53, 80, 135, 443, 50000
 
 class PingTypes(Enum):
     TCP = "TCP"
@@ -75,11 +77,11 @@ def test_sctp(target, threads, data):
             executor.submit(send_sctp, target, port, data)
     test_text_post("SCTP PING")
 
-def test_icmp(target, threads, data):
+def test_icmp(ipv4_target, ipv6_target, threads, data):
+    icmp = ICMP_Type(ipv4_target, ipv6_target, data)
     test_text_pre("ICMP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        for port in range(1, MAX_ICMP_TYPES):
-            executor.submit(send_icmp, target, port, data)
+        icmp.send(executor)
     test_text_post("ICMP PING")
 
 def test_ah(target, threads, data):
@@ -126,7 +128,9 @@ def test_carp(target, threads, data):
 
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
-    parser.add_argument("target", help="Target IP address or hostname")
+    parser.add_argument("--target", help="Target IP address or hostname")
+    parser.add_argument("--ipv4-target", help="Target IPv4 address")
+    parser.add_argument("--ipv6-target", help="Target IPv4 address")
     parser.add_argument("-t", "--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
     parser.add_argument("-m", "--method", required=False, type= PingTypes, choices=[m.value for m in PingTypes])
     parser.add_argument("-d", "--data", type=str, default="pingmaster", help="Data to send. (Default: pingmaster)")
@@ -141,7 +145,7 @@ def main():
         elif args.method == PingTypes.UDP:
             test_udp(target, threads, data)
         elif args.method == PingTypes.ICMP:
-            test_icmp(target, threads, data)
+            test_icmp(args.ipv4_target, args.ipv6_target, threads, data)
         elif args.method == PingTypes.AH:
             test_ah(target, threads, data)
         elif args.method == PingTypes.ESP:
@@ -158,7 +162,6 @@ def main():
             test_sctp(target, threads, data)
         elif args.method == PingTypes.CARP:
             test_carp(target, threads, data)
-
     else:
         test_tcp(target, threads, data)
         test_udp(target, threads, data)

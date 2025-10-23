@@ -17,7 +17,7 @@ This project is to send all kinds of packets to test for tunnel and data exfil
 ```bash
 sudo apt install tshark
 pipx install "git+https://github.com/kcancurly/pingmaster" 
-tshark -i eth0 -f "ip[4:2] == 34443" -w pingmaster.pcap # Press Ctrl+C when finished
+tshark -i eth0 -f "(ip[4:2] = 34443) or (ip6[44:4] = 0x000086db)" -w pingmaster.pcap # Press Ctrl+C when finished
 pm-analyzer pingmaster.pcap
 ```
 
