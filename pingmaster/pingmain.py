@@ -1,9 +1,9 @@
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 from enum import Enum
-from pingmaster.tcp import send as send_tcp
+from pingmaster.tcp import TCP_Type
 from pingmaster.udp import UDP_Type
-from pingmaster.sctp import send as send_sctp
+from pingmaster.sctp import SCTP_Type
 from pingmaster.icmp import ICMP_Type
 from pingmaster.ah import send as send_ah
 from pingmaster.esp import send as send_esp
@@ -55,12 +55,11 @@ def test_text_post(name):
     print(f"{name} took around {minutes} minutes and {seconds} seconds")
     print("===================")
 
-def test_tcp(target, threads, data):
+def test_tcp(ipv4_target, ipv6_target, threads, data):
     test_text_pre("TCP PING")
+    i = TCP_Type(ipv4_target, ipv6_target, data)
     with ThreadPoolExecutor(max_workers=threads) as executor:
-
-        for port in range(1, MAX_PORT):
-            executor.submit(send_tcp, target, port, data, "S")
+        i.send(executor)
 
     test_text_post("TCP PING")
 
@@ -71,11 +70,11 @@ def test_udp(ipv4_target, ipv6_target, threads, data):
         i.send(executor)
     test_text_post("UDP PING")
 
-def test_sctp(target, threads, data):
+def test_sctp(ipv4_target, ipv6_target, threads, data):
     test_text_pre("SCTP PING")
+    i = SCTP_Type(ipv4_target, ipv6_target, data)
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        for port in range(1, MAX_PORT):
-            executor.submit(send_sctp, target, port, data)
+        i.send(executor)
     test_text_post("SCTP PING")
 
 def test_icmp(ipv4_target, ipv6_target, threads, data):
@@ -145,7 +144,7 @@ def main():
 
     if args.method:
         if args.method == PingTypes.TCP.value:
-            test_tcp(target, threads, data)
+            test_tcp(args.ipv4_target, args.ipv6_target, threads, data)
         elif args.method == PingTypes.UDP.value:
             test_udp(args.ipv4_target, args.ipv6_target, threads, data)
         elif args.method == PingTypes.ICMP.value:
@@ -163,14 +162,14 @@ def main():
         elif args.method == PingTypes.OSPF.value:
             test_ospf(target, threads, data)
         elif args.method == PingTypes.SCTP.value:
-            test_sctp(target, threads, data)
+            test_sctp(args.ipv4_target, args.ipv6_target, threads, data)
         elif args.method == PingTypes.CARP.value:
             test_carp(target, threads, data)
     else:
-        test_tcp(target, threads, data)
-        test_udp(target, threads, data)
-        test_sctp(target, threads, data)
-        test_icmp(target, threads, data)
+        test_tcp(args.ipv4_target, args.ipv6_target, threads, data)
+        test_udp(args.ipv4_target, args.ipv6_target, threads, data)
+        test_sctp(args.ipv4_target, args.ipv6_target, threads, data)
+        test_icmp(args.ipv4_target, args.ipv6_target, threads, data)
         test_ah(target, threads, data)
         test_esp(target, threads, data)
         test_gre(target, threads, data)
