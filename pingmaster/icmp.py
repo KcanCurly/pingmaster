@@ -19,12 +19,11 @@ class ICMP_Type(PingType):
 
         packet = (
             IPv6(dst=target, fl=34443) /
-            _ICMPv6() /
+            _ICMPv6(type=t) /
             Raw(load=data)
         )
-        print(packet.show())
 
-        scapy_send(packet)
+        scapy_send(packet, verbose=False)
 
     def send_IPv4(self, executor):
         if executor:
