@@ -22,6 +22,7 @@ class ICMP_Type(PingType):
             ICMPv6EchoRequest() /
             Raw(load=data)
         )
+        print(packet.show())
 
         scapy_send(packet)
 
