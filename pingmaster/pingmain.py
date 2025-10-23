@@ -140,27 +140,27 @@ def main():
     data = args.data
 
     if args.method:
-        if args.method == PingTypes.TCP:
+        if args.method == PingTypes.TCP.value:
             test_tcp(target, threads, data)
-        elif args.method == PingTypes.UDP:
+        elif args.method == PingTypes.UDP.value:
             test_udp(target, threads, data)
-        elif args.method == PingTypes.ICMP:
+        elif args.method == PingTypes.ICMP.value:
             test_icmp(args.ipv4_target, args.ipv6_target, threads, data)
-        elif args.method == PingTypes.AH:
+        elif args.method == PingTypes.AH.value:
             test_ah(target, threads, data)
-        elif args.method == PingTypes.ESP:
+        elif args.method == PingTypes.ESP.value:
             test_esp(target, threads, data)
-        elif args.method == PingTypes.GRE:
+        elif args.method == PingTypes.GRE.value:
             test_gre(target, threads, data)
-        elif args.method == PingTypes.IGMP:
+        elif args.method == PingTypes.IGMP.value:
             test_igmp(target, threads, data)
-        elif args.method == PingTypes.PIM:
+        elif args.method == PingTypes.PIM.value:
             test_pim(target, threads, data)
-        elif args.method == PingTypes.OSPF:
+        elif args.method == PingTypes.OSPF.value:
             test_ospf(target, threads, data)
-        elif args.method == PingTypes.SCTP:
+        elif args.method == PingTypes.SCTP.value:
             test_sctp(target, threads, data)
-        elif args.method == PingTypes.CARP:
+        elif args.method == PingTypes.CARP.value:
             test_carp(target, threads, data)
     else:
         test_tcp(target, threads, data)
