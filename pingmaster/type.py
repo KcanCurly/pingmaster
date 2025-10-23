@@ -11,7 +11,7 @@ class PingType:
             self.send_IPv6(executor)
 
     def send_IPv4(self, executor):
-        pass
+        print("You are calling send_IPv4 of PingType, override this function on child class")
 
     def send_IPv6(self, executor):
-        pass
+        print("You are calling send_IPv6 of PingType, override this function on child class")

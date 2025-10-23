@@ -78,10 +78,10 @@ def test_sctp(target, threads, data):
     test_text_post("SCTP PING")
 
 def test_icmp(ipv4_target, ipv6_target, threads, data):
-    icmp = ICMP_Type(ipv4_target, ipv6_target, data)
+    i = ICMP_Type(ipv4_target, ipv6_target, data)
     test_text_pre("ICMP PING")
     with ThreadPoolExecutor(max_workers=threads) as executor:
-        icmp.send(executor)
+        i.send(executor)
     test_text_post("ICMP PING")
 
 def test_ah(target, threads, data):
@@ -138,8 +138,6 @@ def main():
     target = args.target
     threads = args.threads
     data = args.data
-    print(args.ipv4_target)
-    print(args.ipv6_target)
 
     if args.method:
         if args.method == PingTypes.TCP.value:
