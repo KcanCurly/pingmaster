@@ -19,7 +19,7 @@ class ICMP_Type(PingType):
 
         packet = (
             IPv6(dst=target, fl=34443) /
-            ICMPv6EchoRequest() /
+            _ICMPv6() /
             Raw(load=data)
         )
         print(packet.show())
