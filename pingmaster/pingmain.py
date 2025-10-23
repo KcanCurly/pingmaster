@@ -132,7 +132,7 @@ def main():
     parser.add_argument("--ipv4-target", help="Target IPv4 address")
     parser.add_argument("--ipv6-target", help="Target IPv4 address")
     parser.add_argument("-t", "--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
-    parser.add_argument("-m", "--method", required=False, type= PingTypes, choices=[m.value for m in PingTypes])
+    parser.add_argument("-m", "--method", required=False, choices=[m.value for m in PingTypes])
     parser.add_argument("-d", "--data", type=str, default="pingmaster", help="Data to send. (Default: pingmaster)")
     args = parser.parse_args()
     target = args.target
