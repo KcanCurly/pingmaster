@@ -1,7 +1,7 @@
 from scapy.all import Raw
 from scapy.all import send as scapy_send
 from scapy.layers.inet import IP, ICMP
-from scapy.layers.inet6 import IPv6, _ICMPv6, ICMPv6EchoRequest
+from scapy.layers.inet6 import IPv6, ICMPv6Unknown, ICMPv6EchoRequest
 from pingmaster.type import PingType
 
 class ICMP_Type(PingType):
@@ -19,7 +19,7 @@ class ICMP_Type(PingType):
 
         packet = (
             IPv6(dst=target, fl=34443) /
-            _ICMPv6(type=t) /
+            ICMPv6Unknown(type=t) /
             Raw(load=data)
         )
 
