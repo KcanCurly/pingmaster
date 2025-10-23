@@ -1,5 +1,6 @@
 import argparse
 from scapy.all import rdpcap
+from scapy.layers.inet6 import IPv6, ICMPv6Unknown
 from scapy.layers.inet import IP, TCP, UDP, ICMP
 from scapy.layers.sctp import SCTP
 from scapy.layers.ipsec import AH, ESP
@@ -16,6 +17,10 @@ tcp_list = []
 udp_list = []
 sctp_list = []
 icmp_list = []
+tcp_list_ipv6 = []
+udp_list_ipv6 = []
+sctp_list_ipv6 = []
+icmp_list_ipv6 = []
 ah_s = False
 carp_s = False
 esp_s = False
@@ -26,7 +31,7 @@ pim_s = False
 
 def handle_packet(packet):
     global ah_s, carp_s, esp_s, gre_s, igmp_s, ospf_s, pim_s
-    if IP in packet and packet[IP].id == TARGET_ID:
+    if (IP in packet and packet[IP].id == TARGET_ID):
         if TCP in packet:
             tcp = packet[TCP]
             tcp_list.append(tcp.dport)
@@ -51,6 +56,19 @@ def handle_packet(packet):
             ospf_s = True
         elif PIMv2Hdr in packet:
             pim_s = True
+    elif IPv6 in packet and packet[IPv6].fl == TARGET_ID:
+        if TCP in packet:
+            tcp = packet[TCP]
+            tcp_list_ipv6.append(tcp.dport)
+        elif UDP in packet:
+            udp = packet[UDP]
+            udp_list_ipv6.append(udp.dport)
+        elif SCTP in packet:
+            sctp = packet[SCTP]
+            sctp_list_ipv6.append(sctp.dport)
+        elif ICMP in packet:
+            icmp = packet[ICMPv6Unknown]
+            icmp_list_ipv6.append(icmp.type)
 
 
 def analyze(file):
@@ -67,6 +85,10 @@ def main():
     create_result("UDP", compress_ranges(udp_list))
     create_result("SCTP", compress_ranges(sctp_list))
     create_result_for_icmp("ICMP", compress_ranges(icmp_list))
+    create_result("TCP IPv6", compress_ranges(tcp_list_ipv6))
+    create_result("UDP IPv6", compress_ranges(udp_list_ipv6))
+    create_result("SCTP IPv6", compress_ranges(sctp_list_ipv6))
+    create_result_for_icmp("ICMP IPv6", compress_ranges(icmp_list_ipv6))
     create_result_single("ESP", esp_s)
     create_result_single("AH", ah_s)
     create_result_single("CARP", carp_s)
