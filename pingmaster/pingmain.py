@@ -138,6 +138,8 @@ def main():
     target = args.target
     threads = args.threads
     data = args.data
+    print(args.ipv4_target)
+    print(args.ipv6_target)
 
     if args.method:
         if args.method == PingTypes.TCP.value:
