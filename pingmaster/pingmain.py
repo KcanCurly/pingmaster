@@ -14,6 +14,8 @@ from pingmaster.ospf import send as send_ospf
 from pingmaster.carp import send as send_carp
 import time
 from datetime import datetime
+import os
+import sys
 
 # Src ports: 53, 80, 135, 443, 50000
 
@@ -138,6 +140,9 @@ def main():
     target = args.target
     threads = args.threads
     data = args.data
+
+    if os.geteuid() != 0:
+        print("Run as root, exiting")
 
     if args.method:
         if args.method == PingTypes.TCP.value:
