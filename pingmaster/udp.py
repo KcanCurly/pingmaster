@@ -6,7 +6,6 @@ from pingmaster.type import PingType
 
 class UDP_Type(PingType):
     def _send_IPv4(self, target, data, port):
-
         packet = (
             IP(dst=target, id=34443) /
             UDP(dport=port, sport=44444) /
@@ -16,9 +15,8 @@ class UDP_Type(PingType):
         scapy_send(packet, verbose=False)
 
     def _send_IPv6(self, target, data, port):
-
         packet = (
-            IPv6(dst=target, id=34443) /
+            IPv6(dst=target, fl=34443) /
             UDP(dport=port, sport=44444) /
             Raw(load=data)
         )
@@ -46,7 +44,7 @@ class UDP_Type(PingType):
         else:
             for port in range(0, 65536):
                 packet = (
-                    IPv6(dst=self.IPv6_host, id=34443) /
+                    IPv6(dst=self.IPv6_host, fl=34443) /
                     UDP(dport=port, sport=44444) /
                     Raw(load=self.data)
                 )
