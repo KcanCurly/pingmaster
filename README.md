@@ -15,9 +15,10 @@ This project is to send all kinds of packets to test for tunnel and data exfil
 
 # On server
 ```bash
-sudo apt install tshark
+sudo apt update && sudo apt install tshark pipx python3-pip
 pipx install "git+https://github.com/kcancurly/pingmaster" 
-sudo tcpdump -i eth0 'ip[4:2] = 34443 or (ip6 && (((ip6[1] & 0x0F) << 16) | (ip6[2] << 8) | ip6[3]) == 34443)' -w pingmaster.pcap # Press Ctrl+C when finished
+sudo tcpdump -i eth0 'ip[4:2] = 34443 or (ip6 && (((ip6[1] & 0x0F) << 16) | (ip6[2] << 8) | ip6[3]) == 34443)' -w pingmaster.pcap
+# Press Ctrl+C when finished
 pm-analyzer pingmaster.pcap
 ```
 
@@ -30,7 +31,7 @@ sudo $(where pm)  IP
 
 # Example Client Result
 ```bash
-sudo $(where pm) 192.168.1.110 -t 100     
+sudo $(where pm) --ipv4 192.168.1.110 -t 50     
 ```
 ```                        
 WARNING: CARP overwrites VRRP !
@@ -115,12 +116,7 @@ CARP PING took around 0 minutes and 0 seconds
 
 # Example Server Result
 ```bash
-tshark -i eth0 -f "ip[4:2] == 34443" -w pingmaster.pcap
-Capturing on 'eth0'
-196870
-```
-```bash
-pm-analyzer pingmaster.pcap 
+pm-analyzer pingmaster.pcap pingmaster
 ```
 ```
 WARNING: CARP overwrites VRRP !
