@@ -70,6 +70,7 @@ def analyze(file, data):
         try:
             handle_packet(pkt, data)
         except Exception as e:
+            print(e)
             pass
 
 def main():
