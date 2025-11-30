@@ -32,6 +32,7 @@ pim_s = False
 def handle_packet(packet, data):
     global ah_s, carp_s, esp_s, gre_s, igmp_s, ospf_s, pim_s
     if IP in packet and packet[IP].id == TARGET_ID:
+        print(packet[TCP][Raw].load)
         if TCP in packet and Raw in packet[TCP] and packet[TCP][Raw].load == data:
             tcp_list.append(packet[TCP].dport)
         elif UDP in packet and Raw in packet[UDP] and packet[UDP][Raw].load == data:
