@@ -31,7 +31,6 @@ pim_s = False
 
 def handle_packet(packet, data):
     global ah_s, carp_s, esp_s, gre_s, igmp_s, ospf_s, pim_s
-    data = bytes(data, "utf-8")
     if IP in packet and packet[IP].id == TARGET_ID:
         if TCP in packet and Raw in packet[TCP] and packet[TCP][Raw].load == data:
             tcp_list.append(packet[TCP].dport)
@@ -68,7 +67,7 @@ def analyze(file, data):
     pkts = rdpcap(file)
     for pkt in pkts:
         try:
-            handle_packet(pkt, data)
+            handle_packet(pkt, bytes(data, "utf-8"))
         except Exception as e:
             print(e)
             pass
