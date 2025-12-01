@@ -16,13 +16,13 @@ def handle(pkt):
         print(f"< [{pkt[IP].src}] | [{pkt[Raw].load}]")
         random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
         if TCP in pkt[IP]:
-            send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src)/TCP(sport=pkt[IP][TCP].dport, dport=pkt[IP][TCP].sport, flags="A", seq=pkt[IP][TCP].ack, ack=pkt[IP][TCP].seq + 1)/Raw(load=random_data)
+            send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src, id=TARGET_FLOW)/TCP(sport=pkt[IP][TCP].dport, dport=pkt[IP][TCP].sport, flags="A", seq=pkt[IP][TCP].ack, ack=pkt[IP][TCP].seq + 1)/Raw(load=random_data)
         elif UDP in pkt[IP]:
-            send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src)/UDP(sport=pkt[IP][UDP].dport, dport=pkt[IP][UDP].sport)/Raw(load=random_data)
+            send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src, id=TARGET_FLOW)/UDP(sport=pkt[IP][UDP].dport, dport=pkt[IP][UDP].sport)/Raw(load=random_data)
         elif SCTP in pkt[IP]:
-            send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src)/SCTP(sport=pkt[IP][SCTP].dport, dport=pkt[IP][SCTP].sport)/Raw(load=random_data)
+            send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src, id=TARGET_FLOW)/SCTP(sport=pkt[IP][SCTP].dport, dport=pkt[IP][SCTP].sport)/Raw(load=random_data)
         else:
-            send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src)/pkt[IP][Packet]/Raw(load=random_data)
+            send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src, id=TARGET_FLOW)/pkt[IP][Packet]/Raw(load=random_data)
 
         send(send_pkt, verbose=False)
         print(f"> [{pkt[IP].src}] | [{send_pkt[Raw].load}]")
@@ -33,13 +33,13 @@ def handle(pkt):
         print(f"> [{pkt[IPv6].src}] | [{pkt[Raw].load}]")
         random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
         if TCP in pkt[IPv6]:
-            send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src)/TCP(sport=pkt[IPv6][TCP].dport, dport=pkt[IPv6][TCP].sport, flags="A", seq=pkt[IPv6][TCP].ack, ack=pkt[IPv6][TCP].seq + 1)/Raw(load=random_data)
+            send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src, fl=TARGET_FLOW)/TCP(sport=pkt[IPv6][TCP].dport, dport=pkt[IPv6][TCP].sport, flags="A", seq=pkt[IPv6][TCP].ack, ack=pkt[IPv6][TCP].seq + 1)/Raw(load=random_data)
         elif UDP in pkt[IPv6]:
-            send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src)/UDP(sport=pkt[IPv6][UDP].dport, dport=pkt[IPv6][UDP].sport)/Raw(load=random_data)
+            send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src, fl=TARGET_FLOW)/UDP(sport=pkt[IPv6][UDP].dport, dport=pkt[IPv6][UDP].sport)/Raw(load=random_data)
         elif SCTP in pkt[IPv6]:
-            send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src)/SCTP(sport=pkt[IPv6][SCTP].dport, dport=pkt[IPv6][SCTP].sport)/Raw(load=random_data)
+            send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src, fl=TARGET_FLOW)/SCTP(sport=pkt[IPv6][SCTP].dport, dport=pkt[IPv6][SCTP].sport)/Raw(load=random_data)
         else:
-            send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src)/pkt[IPv6][Packet]/Raw(load=random_data)
+            send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src, fl=TARGET_FLOW)/pkt[IPv6][Packet]/Raw(load=random_data)
 
         send(send_pkt, verbose=False)
         print(f"> [{pkt[IPv6].src}] | [{send_pkt[Raw].load}]")
