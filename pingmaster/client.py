@@ -42,9 +42,10 @@ def main():
         )
         print(f"> [{packet[IP].dst}] | [{packet[TCP].dport}] | [{packet[Raw].load}]")
 
-        incoming_packet = sr1(packet, verbose=False, timeout=args.timeout)
+        incoming_packet = sr(packet, verbose=False, timeout=args.timeout)
 
-        if incoming_packet:
-            print(f"< [{incoming_packet[IP].src}] | [{incoming_packet[Raw].load}]")
+        for a,i in incoming_packet:
+            if Raw in i:
+                print(f"< [{incoming_packet[IP].src}] | [{incoming_packet[Raw].load}]")
 
 
