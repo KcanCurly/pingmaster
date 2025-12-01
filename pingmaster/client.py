@@ -12,7 +12,6 @@ chars = string.ascii_letters + string.digits
 
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
-    parser.add_argument("--target", help="Target IP address or hostname")
     parser.add_argument("--ipv4-target", help="Target IPv4 address")
     parser.add_argument("--ipv6-target", help="Target IPv4 address")
     parser.add_argument("--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
@@ -27,7 +26,7 @@ def main():
     for port in range(0, 65536):
         random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
         packet = (
-            IP(dst=args.IPv4_host, id=34443) /
+            IP(dst=args.ipv4_target, id=34443) /
             TCP(dport=port, sport=44444, flags="S") /
             Raw(load=random_data)
         )

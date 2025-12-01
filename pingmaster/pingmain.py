@@ -128,14 +128,13 @@ def test_carp(target, threads, data):
 
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
-    parser.add_argument("--target", help="Target IP address or hostname")
     parser.add_argument("--ipv4-target", help="Target IPv4 address")
     parser.add_argument("--ipv6-target", help="Target IPv4 address")
     parser.add_argument("-t", "--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
     parser.add_argument("-m", "--method", required=False, choices=[m.value for m in PingTypes])
     parser.add_argument("-d", "--data", type=str, default="pingmaster", help="Data to send. (Default: pingmaster)")
     args = parser.parse_args()
-    target = args.target
+
     threads = args.threads
     data = args.data
 
@@ -150,31 +149,31 @@ def main():
         elif args.method == PingTypes.ICMP.value:
             test_icmp(args.ipv4_target, args.ipv6_target, threads, data)
         elif args.method == PingTypes.AH.value:
-            test_ah(target, threads, data)
+            test_ah(args.ipv4_target, threads, data)
         elif args.method == PingTypes.ESP.value:
-            test_esp(target, threads, data)
+            test_esp(args.ipv4_target, threads, data)
         elif args.method == PingTypes.GRE.value:
-            test_gre(target, threads, data)
+            test_gre(args.ipv4_target, threads, data)
         elif args.method == PingTypes.IGMP.value:
-            test_igmp(target, threads, data)
+            test_igmp(args.ipv4_target, threads, data)
         elif args.method == PingTypes.PIM.value:
-            test_pim(target, threads, data)
+            test_pim(args.ipv4_target, threads, data)
         elif args.method == PingTypes.OSPF.value:
-            test_ospf(target, threads, data)
+            test_ospf(args.ipv4_target, threads, data)
         elif args.method == PingTypes.SCTP.value:
             test_sctp(args.ipv4_target, args.ipv6_target, threads, data)
         elif args.method == PingTypes.CARP.value:
-            test_carp(target, threads, data)
+            test_carp(args.ipv4_target, threads, data)
     else:
         test_tcp(args.ipv4_target, args.ipv6_target, threads, data)
         test_udp(args.ipv4_target, args.ipv6_target, threads, data)
         test_sctp(args.ipv4_target, args.ipv6_target, threads, data)
         test_icmp(args.ipv4_target, args.ipv6_target, threads, data)
-        test_ah(target, threads, data)
-        test_esp(target, threads, data)
-        test_gre(target, threads, data)
-        test_igmp(target, threads, data)
-        test_pim(target, threads, data)
-        test_ospf(target, threads, data)
-        test_carp(target, threads, data)
+        test_ah(args.ipv4_target, threads, data)
+        test_esp(args.ipv4_target, threads, data)
+        test_gre(args.ipv4_target, threads, data)
+        test_igmp(args.ipv4_target, threads, data)
+        test_pim(args.ipv4_target, threads, data)
+        test_ospf(args.ipv4_target, threads, data)
+        test_carp(args.ipv4_target, threads, data)
 
