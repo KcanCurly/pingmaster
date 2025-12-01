@@ -12,6 +12,7 @@ TARGET_FLOW = 34443
 chars = string.ascii_letters + string.digits
 
 def handle(pkt):
+    print(pkt)
     if IP in pkt and pkt[IP].id == TARGET_FLOW and Raw in pkt and pkt[Raw].load.startswith(b"pm"):
         send_pkt = None
         print(f"< [{pkt[IP].src}] | [{pkt[Raw].load}]")
