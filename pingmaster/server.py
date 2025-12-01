@@ -70,9 +70,6 @@ def get_my_ips():
 def main():
     my_ipv4, my_ipv6 = get_my_ips()
 
-    print("IPv4:", my_ipv4)
-    print("IPv6:", my_ipv6)
-
     bpf_parts = []
 
     for ip in my_ipv4:
