@@ -12,7 +12,6 @@ TARGET_FLOW = 34443
 chars = string.ascii_letters + string.digits
 
 def handle(pkt):
-    print("z")
     if IP in pkt and pkt[IP].id == TARGET_FLOW and Raw in pkt and pkt[Raw].load.startswith(b"pm"):
         send_pkt = None
         print(f"< [{pkt[IP].src}] | [{pkt[Raw].load}]")
@@ -78,8 +77,8 @@ def main():
     for ip in my_ipv4:
         bpf_parts.append(f"ip dst host {ip}")
 
-    for ip6 in my_ipv6:
-        bpf_parts.append(f"ip6 dst {ip6}")
+    #for ip6 in my_ipv6:
+    #    bpf_parts.append(f"ip6 dst {ip6}")
     
     bpf_filter = " or ".join(bpf_parts)
 
