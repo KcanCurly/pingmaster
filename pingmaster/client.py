@@ -40,10 +40,11 @@ def main():
             TCP(dport=port, sport=44444, flags="S") /
             Raw(load=random_data)
         )
-        print(f"> [{packet[IP].dst}] | [{packet[Raw].load}]")
+        print(f"> [{packet[IP].dst}] | [{packet[TCP].dport}] | [{packet[Raw].load}]")
 
         incoming_packet = sr1(packet, verbose=False, timeout=args.timeout)
-        if incoming_packet:
+
+        if incoming_packet and IP in incoming_packet and incoming_packet[IP].id == TARGET_FLOW:
             print(f"< [{incoming_packet[IP].src}] | [{incoming_packet[Raw].load}]")
 
 
