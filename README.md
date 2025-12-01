@@ -19,14 +19,14 @@ sudo apt update && sudo apt install tshark pipx python3-pip
 pipx install "git+https://github.com/kcancurly/pingmaster" 
 sudo tcpdump -i eth0 'ip[4:2] = 34443 or (ip6 && (((ip6[1] & 0x0F) << 16) | (ip6[2] << 8) | ip6[3]) == 34443)' -w pingmaster.pcap
 # Press Ctrl+C when finished
-pm-analyzer pingmaster.pcap
+pm-analyzer pingmaster.pcap pingmaster
 ```
 
 # On client
 ```bash
 sudo apt install python3-dev
 pipx install "git+https://github.com/kcancurly/pingmaster" 
-sudo $(where pm)  IP
+sudo $(where pm) --ipv4 IPV4 --ipv6 IPV6
 ```
 
 # Example Client Result

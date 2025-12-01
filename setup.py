@@ -19,6 +19,8 @@ setup(
         "console_scripts": [
             "pm=pingmaster.pingmain:main",
             "pm-analyzer=pingmaster.analyzer:main",
+            "pm-client=pingmaster.client:main",
+            "pm-server=pingmaster.server:main",
         ],
     },
 )
