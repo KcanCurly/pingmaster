@@ -2,6 +2,7 @@ from scapy.all import *
 from scapy.layers.inet import IP, TCP
 from scapy.layers.inet6 import IPv6
 import argparse
+import sys, signal
 
 from pingmaster.pingmain import PingTypes, MAX_ICMP_TYPES, MAX_PORT
 from pingmaster.tcp import TCP_Type
@@ -9,6 +10,11 @@ from pingmaster.tcp import TCP_Type
 TARGET_FLOW = 34443
 
 chars = string.ascii_letters + string.digits
+
+def signal_handler(signal, frame):
+    sys.exit(0)
+
+
 
 def main():
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
@@ -19,24 +25,25 @@ def main():
     parser.add_argument("-m", "--method", required=False, choices=[m.value for m in PingTypes])
     args = parser.parse_args()
 
-
+    
     if os.geteuid() != 0:
         print("Run as root, exiting")
 
-    try:
-        for port in range(0, 65536):
-            
-                random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
-                packet = (
-                    IP(dst=args.ipv4_target, id=34443) /
-                    TCP(dport=port, sport=44444, flags="S") /
-                    Raw(load=random_data)
-                )
-                print(f"> [{packet[IP].dst}] | [{packet[Raw].load}]")
+    signal.signal(signal.SIGINT, signal_handler)
 
-                incoming_packet = sr1(packet, verbose=False, timeout=args.timeout)
-                if incoming_packet:
-                    print(f"< [{incoming_packet[IP].src}] | [{incoming_packet[Raw].load}]")
-    except KeyboardInterrupt:
-        sys.exit(1)
+
+    for port in range(0, 65536):
+        
+        random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
+        packet = (
+            IP(dst=args.ipv4_target, id=34443) /
+            TCP(dport=port, sport=44444, flags="S") /
+            Raw(load=random_data)
+        )
+        print(f"> [{packet[IP].dst}] | [{packet[Raw].load}]")
+
+        incoming_packet = sr1(packet, verbose=False, timeout=args.timeout)
+        if incoming_packet:
+            print(f"< [{incoming_packet[IP].src}] | [{incoming_packet[Raw].load}]")
+
 
