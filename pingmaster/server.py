@@ -5,6 +5,7 @@ from scapy.all import send
 from scapy.layers.sctp import SCTP
 import random
 import string
+import netifaces
 
 TARGET_FLOW = 34443
 
@@ -44,5 +45,38 @@ def handle(pkt):
         send(send_pkt, verbose=False)
         print(f"> [{pkt[IPv6].src}] | [{send_pkt[Raw].load}]")
 
+def get_my_ips():
+    ips4 = []
+    ips6 = []
+
+    for iface in netifaces.interfaces():
+        addrs = netifaces.ifaddresses(iface)
+
+        if netifaces.AF_INET in addrs:
+            for a in addrs[netifaces.AF_INET]:
+                ips4.append(a["addr"])
+
+        if netifaces.AF_INET6 in addrs:
+            for a in addrs[netifaces.AF_INET6]:
+                # remove %eth0 zone index
+                ips6.append(a["addr"].split("%")[0])
+
+    return ips4, ips6
+
+
+
+
 def main():
-    sniff(filter="ip or ip6", prn=handle)
+    my_ipv4, my_ipv6 = get_my_ips()
+
+    bpf_parts = []
+
+    for ip in my_ipv4:
+        bpf_parts.append(f"ip dst {ip}")
+
+    for ip6 in my_ipv6:
+        bpf_parts.append(f"ip6 dst {ip6}")
+    
+    bpf_filter = " or ".join(bpf_parts)
+
+    sniff(filter=bpf_filter, prn=handle)
