@@ -45,6 +45,7 @@ def main():
         incoming_packets = sr(packet, verbose=False, timeout=args.timeout)
 
         for a,i in incoming_packets[1]:
+            print(i)
             if Raw in i:
                 print(f"< [{i[IP].src}] | [{i[Raw].load}]")
 
