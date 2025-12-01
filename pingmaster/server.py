@@ -83,4 +83,4 @@ def main():
     
     bpf_filter = " or ".join(bpf_parts)
 
-    sniff(filter="(ip or ip6) and ()", prn=handle)
+    sniff(filter=f"(ip or ip6) and ({bpf_filter})", prn=handle)
