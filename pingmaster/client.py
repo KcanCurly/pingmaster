@@ -46,7 +46,7 @@ def main():
 
         for a,i in ans:
             print(a)
-            if Raw in i:
+            if Raw in a:
                 print(f"< [{i[IP].src}] | [{i[Raw].load}]")
 
 
