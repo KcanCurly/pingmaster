@@ -34,7 +34,7 @@ def main():
 
     for port in range(0, 65536):
         
-        random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
+        random_data = b"pm-" + bytes(''.join(random.choice(chars) for _ in range(5)), "utf-8")
         packet = (
             IP(dst=args.ipv4_target, id=34443) /
             TCP(dport=port, sport=44444, flags="S") /

@@ -13,10 +13,10 @@ chars = string.ascii_letters + string.digits
 
 def handle(pkt):
     print("z")
-    if IP in pkt and pkt[IP].id == TARGET_FLOW and Raw in pkt:
+    if IP in pkt and pkt[IP].id == TARGET_FLOW and Raw in pkt and pkt[Raw].load.startswith(b"pm"):
         send_pkt = None
         print(f"< [{pkt[IP].src}] | [{pkt[Raw].load}]")
-        random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
+        random_data = b"pm-" + bytes(''.join(random.choice(chars) for _ in range(5)), "utf-8")
         if TCP in pkt[IP]:
             send_pkt = IP(src=pkt[IP].dst, dst=pkt[IP].src, id=TARGET_FLOW)/TCP(sport=pkt[IP][TCP].dport, dport=pkt[IP][TCP].sport, flags="A", seq=pkt[IP][TCP].ack, ack=pkt[IP][TCP].seq + 1)/Raw(load=random_data)
         elif UDP in pkt[IP]:
@@ -30,10 +30,10 @@ def handle(pkt):
         print(f"> [{pkt[IP].src}] | [{send_pkt[Raw].load}]")
 
 
-    elif IPv6 in pkt and pkt[IPv6].fl == TARGET_FLOW and Raw in pkt:
+    elif IPv6 in pkt and pkt[IPv6].fl == TARGET_FLOW and Raw in pkt and pkt[Raw].load.startswith(b"pm"):
         send_pkt = None
         print(f"> [{pkt[IPv6].src}] | [{pkt[Raw].load}]")
-        random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
+        random_data = b"pm-" + bytes(''.join(random.choice(chars) for _ in range(5)), "utf-8")
         if TCP in pkt[IPv6]:
             send_pkt = IPv6(src=pkt[IPv6].dst, dst=pkt[IPv6].src, fl=TARGET_FLOW)/TCP(sport=pkt[IPv6][TCP].dport, dport=pkt[IPv6][TCP].sport, flags="A", seq=pkt[IPv6][TCP].ack, ack=pkt[IPv6][TCP].seq + 1)/Raw(load=random_data)
         elif UDP in pkt[IPv6]:
@@ -76,11 +76,11 @@ def main():
     bpf_parts = []
 
     for ip in my_ipv4:
-        bpf_parts.append(f"ip dst {ip}")
+        bpf_parts.append(f"ip dst host {ip}")
 
     for ip6 in my_ipv6:
         bpf_parts.append(f"ip6 dst {ip6}")
     
     bpf_filter = " or ".join(bpf_parts)
 
-    sniff(filter=bpf_filter, prn=handle)
+    sniff(filter="(ip or ip6) and ()", prn=handle)
