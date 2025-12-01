@@ -42,7 +42,7 @@ def main():
         )
         print(f"> [{packet[IP].dst}] | [{packet[TCP].dport}] | [{packet[Raw].load}]")
 
-        incoming_packets = sr1(packet, verbose=False, timeout=args.timeout, multi=True)
+        incoming_packets = sr(packet, verbose=False, timeout=args.timeout, multi=True)
 
         for a,i in incoming_packets[1]:
             print(i)
