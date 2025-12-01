@@ -11,7 +11,7 @@ TARGET_FLOW = 34443
 chars = string.ascii_letters + string.digits
 
 def handle(pkt):
-    if IP in pkt and pkt[IP].id == TARGET_FLOW:
+    if IP in pkt and pkt[IP].id == TARGET_FLOW and Raw in pkt:
         send_pkt = None
         print(f"< [{pkt[IP].src}] | [{pkt[Raw].load}]")
         random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
@@ -28,7 +28,7 @@ def handle(pkt):
         print(f"> [{pkt[IP].src}] | [{send_pkt[Raw].load}]")
 
 
-    elif IPv6 in pkt and pkt[IPv6].fl == TARGET_FLOW:
+    elif IPv6 in pkt and pkt[IPv6].fl == TARGET_FLOW and Raw in pkt:
         send_pkt = None
         print(f"> [{pkt[IPv6].src}] | [{pkt[Raw].load}]")
         random_data = bytes(''.join(random.choice(chars) for _ in range(10)), "utf-8")
