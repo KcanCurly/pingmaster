@@ -42,11 +42,10 @@ def main():
         )
         print(f"> [{packet[IP].dst}] | [{packet[TCP].dport}] | [{packet[Raw].load}]")
 
-        ans, unansw = sr(packet, verbose=False, timeout=args.timeout)
+        ans, _ = sr(packet, verbose=False, timeout=args.timeout)
 
-        for a,i in ans:
-            print(a)
+        for a,_ in ans:
             if Raw in a:
-                print(f"< [{a[IP].src}] | [{a[Raw].load}]")
+                print(f"< [{a[IP].src}] | [{a[IP].dport}] | [{a[Raw].load}]")
 
 
