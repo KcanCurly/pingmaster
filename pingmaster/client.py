@@ -30,9 +30,9 @@ def main():
             TCP(dport=port, sport=44444, flags="S") /
             Raw(load=random_data)
         )
-        print(f"> [{packet[IP].dst}] | [{packet[IP][Packet][Raw].load}]")
+        print(f"> [{packet[IP].dst}] | [{packet[Raw].load}]")
 
         incoming_packet = sr1(packet, verbose=False, timeout=args.timeout)
         if incoming_packet:
-            print(f"< [{incoming_packet[IP].src}] | [{incoming_packet[IP][Packet][Raw].load}]")
+            print(f"< [{incoming_packet[IP].src}] | [{incoming_packet[Raw].load}]")
 
