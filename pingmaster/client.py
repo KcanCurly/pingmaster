@@ -39,12 +39,16 @@ def main():
 
 
     if args.ports:
-        ports = [parse_ports(a) for a in args.ports]
+        ports = []
+        for a in args.ports:
+            ports += parse_ports(a)
     else:
         ports = [i for i in range(0, MAX_PORT)]
 
     if args.source_port:
-        source_ports = [parse_ports(a) for a in args.source_port]
+        source_ports = []
+        for a in args.source_port:
+            source_ports += parse_ports(a)
     else:
         source_ports = [44444]
 
