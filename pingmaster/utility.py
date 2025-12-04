@@ -9,6 +9,7 @@ class CustomAction(argparse.Action):
         if isinstance(values, list):
             values = []
             for v in values:
+                print(v)
                 values += parse_ports(v)
 
         setattr(namespace, self.dest, values)

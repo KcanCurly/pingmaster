@@ -28,7 +28,7 @@ def handle(pkt):
             send_pkt = t(src=pkt[t].dst, dst=pkt[t].src, id=TARGET_FLOW)/pkt[t][Packet]/Raw(load=random_data)
 
         send(send_pkt, verbose=False)
-        print(f"> [{pkt[t].src}] | [{send_pkt[Raw].load}]")
+        print(f"> [{send_pkt[t].src}] | [{send_pkt[Raw].load}]")
 
 def get_my_ips():
     ips4 = []
