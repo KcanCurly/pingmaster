@@ -20,14 +20,14 @@ def main():
     parser.add_argument("--ipv6", help="Target IPv6 address")
     parser.add_argument(
     "-p", "--ports",
-    action=CustomAction,
     nargs="+",
+    action="extend",
     help="Destination ports or ranges (e.g., 80 443 1000-2000)"
     )
     parser.add_argument(
     "--source-port",
-    action=CustomAction,
     nargs="+",
+    action="extend",
     default=[44444],
     help="Source ports or ranges (e.g., 80 443 1000-2000)"
     )
@@ -38,7 +38,9 @@ def main():
     if not (args.ipv4 or args.ipv6):
         parser.error("You must specify at least --ipv4 or --ipv6")
 
+
     if args.ports:
+        print(args.ports)
         ports = args.ports
     else:
         ports = [i for i in range(0, MAX_PORT)]
