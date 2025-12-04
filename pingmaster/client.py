@@ -40,7 +40,7 @@ def main():
 
 
     if args.ports:
-        ports = [parse_ports(a) for a in args.ports.split()]
+        ports = [parse_ports(a) for a in args.ports]
     else:
         ports = [i for i in range(0, MAX_PORT)]
 
