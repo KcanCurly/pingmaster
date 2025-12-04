@@ -151,7 +151,7 @@ def main():
     "--source-port",
     action=CustomAction,
     nargs="+",
-    default=44444,
+    default=[44444],
     help="Source ports or ranges (e.g., 80 443 1000-2000)"
     )
     parser.add_argument("-t", "--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
