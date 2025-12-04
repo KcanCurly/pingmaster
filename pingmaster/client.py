@@ -8,14 +8,13 @@ from pingmaster.pingmain import PingTypes, MAX_ICMP_TYPES, MAX_PORT
 from pingmaster.tcp import TCP_Type
 from pingmaster.utility import CustomAction
 
-FLOW_ID = 34443
-
 chars = string.ascii_letters + string.digits
 
 def signal_handler(signal, frame):
     sys.exit(0)
 
 def main():
+    from pingmaster.pingmain import FLOW_ID
     parser = argparse.ArgumentParser(description="Send series of packets to a target host.")
     parser.add_argument("--ipv4", help="Target IPv4 address")
     parser.add_argument("--ipv6", help="Target IPv6 address")

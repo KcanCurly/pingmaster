@@ -9,7 +9,6 @@ from scapy.contrib.igmp import IGMP
 from scapy.contrib.ospf import OSPF_Hdr
 from scapy.contrib.pim import PIMv2Hdr
 from pingmaster.utility import compress_ranges, create_result, create_result_single, create_result_for_icmp
-from pingmaster.pingmain import FLOW_ID
 
 tcp_list = []
 udp_list = []
@@ -28,6 +27,7 @@ ospf_s = False
 pim_s = False
 
 def handle_packet(packet, data):
+    from pingmaster.pingmain import FLOW_ID
     global ah_s, carp_s, esp_s, gre_s, igmp_s, ospf_s, pim_s
     if IP in packet and packet[IP].id == FLOW_ID:
         if TCP in packet and Raw in packet[TCP] and packet[TCP][Raw].load == data:

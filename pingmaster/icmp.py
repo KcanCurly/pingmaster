@@ -3,13 +3,12 @@ from scapy.all import send as scapy_send
 from scapy.layers.inet import IP, ICMP
 from scapy.layers.inet6 import IPv6, ICMPv6Unknown
 from pingmaster.type import PingType
-from pingmaster.pingmain import FLOW_ID
 
 MAX_ICMP_TYPE = 256
 
 class ICMP_Type(PingType):
     def _send_IPv4(self, target, data, t):
-
+        from pingmaster.pingmain import FLOW_ID
         packet = (
             IP(dst=target, id=FLOW_ID) /
             ICMP(type=t) /
@@ -19,7 +18,7 @@ class ICMP_Type(PingType):
         scapy_send(packet, verbose=False)
 
     def _send_IPv6(self, target, data, t):
-
+        from pingmaster.pingmain import FLOW_ID
         packet = (
             IPv6(dst=target, fl=FLOW_ID) /
             ICMPv6Unknown(type=t) /
@@ -29,6 +28,7 @@ class ICMP_Type(PingType):
         scapy_send(packet, verbose=False)
 
     def send_IPv4(self, executor):
+        from pingmaster.pingmain import FLOW_ID
         if executor:
             for t in range(0, MAX_ICMP_TYPE):
                 executor.submit(self._send_IPv4, self.IPv4_host, self.data, t)
@@ -43,6 +43,7 @@ class ICMP_Type(PingType):
                 scapy_send(packet, verbose=False)
 
     def send_IPv6(self, executor):
+        from pingmaster.pingmain import FLOW_ID
         if executor:
             for t in range(0, MAX_ICMP_TYPE):
                 executor.submit(self._send_IPv6, self.IPv6_host, self.data, t)

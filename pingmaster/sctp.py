@@ -4,10 +4,10 @@ from scapy.layers.inet import IP
 from scapy.layers.sctp import SCTP
 from scapy.layers.inet6 import IPv6
 from pingmaster.type import PingType
-from pingmaster.pingmain import FLOW_ID
 
 class SCTP_Type(PingType):
     def _send_IPv4(self, target, data, dport, sport):
+        from pingmaster.pingmain import FLOW_ID
         packet = (
             IP(dst=target, id=FLOW_ID) /
             SCTP(dport=dport, sport=sport) /
@@ -17,6 +17,7 @@ class SCTP_Type(PingType):
         scapy_send(packet, verbose=False)
 
     def _send_IPv6(self, target, data, dport, sport):
+        from pingmaster.pingmain import FLOW_ID
         packet = (
             IPv6(dst=target, fl=FLOW_ID) /
             SCTP(dport=dport, sport=sport) /
@@ -26,6 +27,7 @@ class SCTP_Type(PingType):
         scapy_send(packet, verbose=False)
 
     def send_IPv4(self, executor):
+        from pingmaster.pingmain import FLOW_ID
         if executor:
             for sport in self.source_ports:
                 for dport in self.ports:
@@ -42,6 +44,7 @@ class SCTP_Type(PingType):
                     scapy_send(packet, verbose=False)
 
     def send_IPv6(self, executor):
+        from pingmaster.pingmain import FLOW_ID
         if executor:
             for sport in self.source_ports:
                 for dport in self.ports:

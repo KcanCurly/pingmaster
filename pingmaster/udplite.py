@@ -3,10 +3,10 @@ from scapy.all import send as scapy_send
 from scapy.layers.inet import IP, UDP
 from scapy.layers.inet6 import IPv6
 from pingmaster.type import PingType
-from pingmaster.pingmain import FLOW_ID
 
 class UDPLite_Type(PingType):
     def _send_IPv4(self, target, data, dport, sport):
+        from pingmaster.pingmain import FLOW_ID
         packet = (
             IP(dst=target, id=FLOW_ID, proto=136) /
             UDP(dport=dport, sport=sport) /
@@ -16,6 +16,7 @@ class UDPLite_Type(PingType):
         scapy_send(packet, verbose=False)
 
     def _send_IPv6(self, target, data, dport, sport):
+        from pingmaster.pingmain import FLOW_ID
         packet = (
             IPv6(dst=target, fl=FLOW_ID, proto=136) /
             UDP(dport=dport, sport=sport) /
@@ -25,6 +26,7 @@ class UDPLite_Type(PingType):
         scapy_send(packet, verbose=False)
 
     def send_IPv4(self, executor):
+        from pingmaster.pingmain import FLOW_ID
         if executor:
             for sport in self.source_ports:
                 for dport in self.ports:
@@ -41,6 +43,7 @@ class UDPLite_Type(PingType):
                     scapy_send(packet, verbose=False)
 
     def send_IPv6(self, executor):
+        from pingmaster.pingmain import FLOW_ID
         if executor:
             for sport in self.source_ports:
                 for dport in self.ports:
