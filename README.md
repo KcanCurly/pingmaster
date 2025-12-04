@@ -19,7 +19,12 @@ Try using --source-port 25 (SMTP) 53 (DNS) 485 (SMTP) 587 (SMTP) 2525 (SMTP)
 
 # On server
 ```bash
-sudo apt update && sudo apt install tshark pipx python3-pip
+sudo apt update && sudo apt install tshark pipx python3-pip iptables
+sudo iptables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
+sudo iptables -A OUTPUT -p icmp -j DROP
+sudo ip6tables -A OUTPUT -p tcp --tcp-flags RST RST -j DROP
+sudo ip6tables -A OUTPUT -p icmpv6 -j DROP
+pip install netifaces --break-system-packages
 pipx install "git+https://github.com/kcancurly/pingmaster" 
 sudo tcpdump -i eth0 'ip[4:2] = 34443 or (ip6 && (((ip6[1] & 0x0F) << 16) | (ip6[2] << 8) | ip6[3]) == 34443)' -w pingmaster.pcap
 # Press Ctrl+C when finished
@@ -183,3 +188,7 @@ TEST: PIM
 ===============
 Succes: True
 ```
+
+# Access Test
+You can use pm-client and pm-server to test access if its one way or two way
+Client sends packets with chosen packet type and adds Raw packet with random value starting with "pm-", when server detects it, it prints the value and sends same packet type with random value starting with "pm-" as well if client detects it, it prints the value. This can help you figure out if access is one way or two way.
