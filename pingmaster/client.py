@@ -34,6 +34,11 @@ def main():
     parser.add_argument("--timeout", type=int, default=3, help="Amount of timeout to wait for packets. (Default: 3)")
     parser.add_argument("-m", "--method", required=False, choices=[m.value for m in PingTypes])
     args = parser.parse_args()
+
+    if os.geteuid() != 0:
+        print("Run as root, exiting")
+        os._exit(1)
+
     if not (args.ipv4 or args.ipv6):
         parser.error("You must specify at least --ipv4 or --ipv6")
 

@@ -159,6 +159,10 @@ def main():
     parser.add_argument("-d", "--data", type=str, default="pingmaster", help="Data to send. (Default: pingmaster)")
     args = parser.parse_args()
 
+    if os.geteuid() != 0:
+        print("Run as root, exiting")
+        os._exit(1)
+
     if not (args.ipv4 or args.ipv6):
         parser.error("You must specify at least --ipv4 or --ipv6")
 
@@ -168,12 +172,20 @@ def main():
     SOURCE_PORT = args.source_port
 
     if args.ports:
-        ports = args.ports
+        ports = []
+        for a in args.ports:
+            ports += parse_ports(a)
     else:
         ports = [i for i in range(0, MAX_PORT)]
 
-    if os.geteuid() != 0:
-        print("Run as root, exiting")
+    if args.source_port:
+        source_ports = []
+        for a in args.source_port:
+            source_ports += parse_ports(a)
+    else:
+        source_ports = [44444]
+
+
 
     if args.method:
         if args.method == PingTypes.TCP.value:

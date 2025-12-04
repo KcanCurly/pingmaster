@@ -52,6 +52,9 @@ def get_my_ips():
 
 
 def main():
+    if os.geteuid() != 0:
+        print("Run as root, exiting")
+        os._exit(1)
     my_ipv4, my_ipv6 = get_my_ips()
 
     bpf_parts = []
