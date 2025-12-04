@@ -62,7 +62,7 @@ def main():
             ans, _ = sr(packet, verbose=False, timeout=args.timeout)
 
             for a,_ in ans:
-                if Raw in a and a[Raw].load.startswith(b"pm"):
+                if Raw in a and a[Raw].load.startswith(b"pm") and a[IP].dst == packet[IP].dst:
                     print(f"< [{a[IP].src}] | [{a[IP].dport}] | [{a[Raw].load}]")
 
 
