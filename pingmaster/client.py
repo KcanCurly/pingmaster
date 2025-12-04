@@ -6,7 +6,7 @@ import sys, signal
 
 from pingmaster.pingmain import PingTypes, MAX_ICMP_TYPES, MAX_PORT
 from pingmaster.tcp import TCP_Type
-from pingmaster.utility import CustomAction
+from pingmaster.utility import parse_ports
 
 chars = string.ascii_letters + string.digits
 
@@ -40,8 +40,7 @@ def main():
 
 
     if args.ports:
-        print(args.ports)
-        ports = args.ports
+        ports = [parse_ports(a) for a in args.ports.split()]
     else:
         ports = [i for i in range(0, MAX_PORT)]
 
