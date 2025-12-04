@@ -23,14 +23,12 @@ def main():
     "-p", "--ports",
     action=CustomAction,
     nargs="+",
-    action="extend",
     help="Destination ports or ranges (e.g., 80 443 1000-2000)"
     )
     parser.add_argument(
     "--source-port",
     action=CustomAction,
     nargs="+",
-    action="extend",
     default=44444,
     help="Source ports or ranges (e.g., 80 443 1000-2000)"
     )
