@@ -3,6 +3,7 @@ This project is to send all kinds of packets to test for tunnel and data exfil
 # Implemented Protocols
 - TCP
 - UDP
+- UDPLite
 - SCTP
 - ICMP
 - AH
@@ -12,6 +13,9 @@ This project is to send all kinds of packets to test for tunnel and data exfil
 - PIM
 - OSPF
 - CARP
+
+# Hint
+Try using --source-port 25 (SMTP) 53 (DNS) 485 (SMTP) 587 (SMTP) 2525 (SMTP)
 
 # On server
 ```bash

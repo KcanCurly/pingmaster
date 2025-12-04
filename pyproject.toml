@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pingmaster"
+version = "1.0.0"
+description = "Ping protocols to test firewall rules"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "kcancurly" }
+]
+urls = { "Homepage" = "https://github.com/kcancurly/pingmaster"}
+
+dependencies = [
+    "scapy",
+    "netifaces",
+]
+
+[project.scripts]
+pm = "pingmaster.pingmain:main"
+pm-analyzer = "pingmaster.analyzer:main"
+pm-client = "pingmaster.client:main"
+pm-server = "pingmaster.server:main"
+

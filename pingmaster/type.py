@@ -1,7 +1,9 @@
 class PingType:
-    def __init__(self, IPv4_host, IPv6_host, data):
+    def __init__(self, IPv4_host, IPv6_host, data, ports, source_ports):
         self.IPv4_host = IPv4_host
         self.IPv6_host = IPv6_host
+        self.ports = ports
+        self.source_ports = source_ports
         self.data = data.encode("utf-8", errors="replace")
 
     def send(self, executor):

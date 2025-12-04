@@ -5,10 +5,10 @@ from scapy.layers.inet6 import IPv6
 from pingmaster.type import PingType
 from pingmaster.pingmain import FLOW_ID
 
-class UDP_Type(PingType):
+class UDPLite_Type(PingType):
     def _send_IPv4(self, target, data, dport, sport):
         packet = (
-            IP(dst=target, id=FLOW_ID) /
+            IP(dst=target, id=FLOW_ID, proto=136) /
             UDP(dport=dport, sport=sport) /
             Raw(load=data)
         )
@@ -17,7 +17,7 @@ class UDP_Type(PingType):
 
     def _send_IPv6(self, target, data, dport, sport):
         packet = (
-            IPv6(dst=target, fl=FLOW_ID) /
+            IPv6(dst=target, fl=FLOW_ID, proto=136) /
             UDP(dport=dport, sport=sport) /
             Raw(load=data)
         )
@@ -33,7 +33,7 @@ class UDP_Type(PingType):
             for sport in self.source_ports:
                 for dport in self.ports:
                     packet = (
-                        IP(dst=self.IPv4_host, id=FLOW_ID) /
+                        IP(dst=self.IPv4_host, id=FLOW_ID, proto=136) /
                         UDP(dport=dport, sport=sport) /
                         Raw(load=self.data)
                     )
@@ -49,7 +49,7 @@ class UDP_Type(PingType):
             for sport in self.source_ports:
                 for dport in self.ports:
                     packet = (
-                        IPv6(dst=self.IPv6_host, fl=FLOW_ID) /
+                        IPv6(dst=self.IPv6_host, fl=FLOW_ID, proto=136) /
                         UDP(dport=dport, sport=sport) /
                         Raw(load=self.data)
                     )

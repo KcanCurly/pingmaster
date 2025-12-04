@@ -9,9 +9,7 @@ from scapy.contrib.igmp import IGMP
 from scapy.contrib.ospf import OSPF_Hdr
 from scapy.contrib.pim import PIMv2Hdr
 from pingmaster.utility import compress_ranges, create_result, create_result_single, create_result_for_icmp
-
-# The unique IP ID you want to filter
-TARGET_ID = 34443
+from pingmaster.pingmain import FLOW_ID
 
 tcp_list = []
 udp_list = []
@@ -31,7 +29,7 @@ pim_s = False
 
 def handle_packet(packet, data):
     global ah_s, carp_s, esp_s, gre_s, igmp_s, ospf_s, pim_s
-    if IP in packet and packet[IP].id == TARGET_ID:
+    if IP in packet and packet[IP].id == FLOW_ID:
         if TCP in packet and Raw in packet[TCP] and packet[TCP][Raw].load == data:
             tcp_list.append(packet[TCP].dport)
         elif UDP in packet and Raw in packet[UDP] and packet[UDP][Raw].load == data:
@@ -52,7 +50,7 @@ def handle_packet(packet, data):
             ospf_s = True
         elif PIMv2Hdr in packet and Raw in packet[PIMv2Hdr] and packet[PIMv2Hdr][Raw].load == data:
             pim_s = True
-    elif IPv6 in packet and packet[IPv6].fl == TARGET_ID:
+    elif IPv6 in packet and packet[IPv6].fl == FLOW_ID:
         if TCP in packet and Raw in packet[TCP] and packet[TCP][Raw].load == data:
             tcp_list_ipv6.append(packet[TCP].dport)
         elif UDP in packet and Raw in packet[UDP] and packet[UDP][Raw].load == data:
@@ -70,7 +68,6 @@ def analyze(file, data):
             handle_packet(pkt, bytes(data, "utf-8"))
         except Exception as e:
             print(e)
-            pass
 
 def main():
     parser = argparse.ArgumentParser(description="Analyze pcap.")
