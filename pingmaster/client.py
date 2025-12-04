@@ -22,14 +22,13 @@ def main():
     "-p", "--ports",
     nargs="+",
     action="extend",
-    help="Destination ports or ranges (e.g., 80 443 1000-2000)"
+    help="Destination ports or ranges (e.g., 80 443 1000-2000) (default: all ports)"
     )
     parser.add_argument(
     "--source-port",
     nargs="+",
     action="extend",
-    default=[44444],
-    help="Source ports or ranges (e.g., 80 443 1000-2000)"
+    help="Source ports or ranges (e.g., 80 443 1000-2000) (default: 44444)"
     )
     parser.add_argument("--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
     parser.add_argument("--timeout", type=int, default=3, help="Amount of timeout to wait for packets. (Default: 3)")
@@ -44,12 +43,18 @@ def main():
     else:
         ports = [i for i in range(0, MAX_PORT)]
 
+    if args.source_port:
+        source_ports = [parse_ports(a) for a in args.source_port]
+    else:
+        source_ports = [44444]
+
+
     if os.geteuid() != 0:
         print("Run as root, exiting")
 
     signal.signal(signal.SIGINT, signal_handler)
 
-    for sport in args.source_port:
+    for sport in source_ports:
         for dport in ports:
             
             random_data = b"pm-" + bytes(''.join(random.choice(chars) for _ in range(5)), "utf-8")
