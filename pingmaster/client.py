@@ -94,5 +94,5 @@ def main():
                     ans, _ = sr(packet, promisc=True, verbose=False, timeout=args.timeout)
 
                     for _,a in ans:
-                        if Raw in a and a[Raw].load.startswith(b"pm") and a[ipv].src == packet[ipv].dst:
+                        if Raw in a and a[Raw].load.startswith(b"pm") and a[ipv].src == target:
                             print(f"< [{a[ipv].src}] | [{a[ipv].dport}] | [{a[Raw].load}]")
