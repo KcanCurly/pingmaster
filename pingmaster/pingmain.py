@@ -18,8 +18,6 @@ import time
 from datetime import datetime
 import os
 
-# Src ports: 53, 80, 135, 443, 50000
-
 class PingTypes(Enum):
     TCP = "TCP"
     UDP = "UDP"
@@ -210,7 +208,6 @@ def main():
             test_pim(args.ipv4, threads, data)
         elif args.method == PingTypes.OSPF.value:
             test_ospf(args.ipv4, threads, data)
-
         elif args.method == PingTypes.CARP.value:
             test_carp(args.ipv4, threads, data)
     else:

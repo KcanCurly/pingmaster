@@ -1,6 +1,10 @@
-from scapy.all import *
-from scapy.layers.inet import IP, TCP
+import os
+import random
+import string
+from scapy.all import Raw, sr
+from scapy.layers.inet import IP, TCP, UDP, ICMP
 from scapy.layers.inet6 import IPv6
+from scapy.layers.sctp import SCTP
 import argparse
 import sys, signal
 
@@ -32,7 +36,7 @@ def main():
     )
     parser.add_argument("--threads", type=int, default=10, help="Amount of threads. (Default: 10)")
     parser.add_argument("--timeout", type=int, default=3, help="Amount of timeout to wait for packets. (Default: 3)")
-    parser.add_argument("-m", "--method", required=False, choices=[m.value for m in PingTypes])
+    parser.add_argument("-m", "--method", required=True, choices=[m.value for m in PingTypes])
     args = parser.parse_args()
 
     if os.geteuid() != 0:
@@ -57,27 +61,38 @@ def main():
     else:
         source_ports = [44444]
 
-
-    if os.geteuid() != 0:
-        print("Run as root, exiting")
-
     signal.signal(signal.SIGINT, signal_handler)
 
-    for sport in source_ports:
-        for dport in ports:
-            
-            random_data = b"pm-" + bytes(''.join(random.choice(chars) for _ in range(5)), "utf-8")
-            packet = (
-                IP(dst=args.ipv4, id=FLOW_ID) /
-                TCP(dport=dport, sport=sport, flags="S") /
-                Raw(load=random_data)
-            )
-            print(f"> [{packet[IP].dst}] | [{packet[TCP].dport}] | [{packet[Raw].load}]")
+    t = {}
+    if args.ipv4:
+        t[IP] = args.ipv4
+    if args.ipv6:
+        t[IPv6] = args.ipv6
+    m = PingTypes[args.method]
 
-            ans, _ = sr(packet, promisc=True, verbose=False, timeout=args.timeout)
+    for ipv, target in t.items():
+        if m in [PingTypes.TCP, PingTypes.UDP, PingTypes.UDPL, PingTypes.SCTP]:
+            for sport in source_ports:
+                for dport in ports:
+                    random_data = b"pm-" + bytes(''.join(random.choice(chars) for _ in range(5)), "utf-8")
+                    i = ipv(dst=target, id=FLOW_ID)
+                    if m == PingTypes.TCP:
+                        i2 = TCP(dport=dport, sport=sport, flags="S")
+                    elif m == PingTypes.UDP:
+                        i2 = UDP(dport=dport, sport=sport)
+                    elif m == PingTypes.UDPL:
+                        i2 = UDP(dport=dport, sport=sport, proto=136)
+                    elif m == PingTypes.SCTP:
+                        i2 = SCTP(dport=dport, sport=sport)
+                    packet = (
+                        i /
+                        i2 /
+                        Raw(load=random_data)   
+                    )
+                    print(f"> [{packet[ipv].dst}] | [{dport}] | [{packet[Raw].load}]")
 
-            for _,a in ans:
-                if Raw in a and a[Raw].load.startswith(b"pm") and a[IP].src == packet[IP].dst:
-                    print(f"< [{a[IP].src}] | [{a[IP].dport}] | [{a[Raw].load}]")
+                    ans, _ = sr(packet, promisc=True, verbose=False, timeout=args.timeout)
 
-
+                    for _,a in ans:
+                        if Raw in a and a[Raw].load.startswith(b"pm") and a[ipv].src == packet[ipv].dst:
+                            print(f"< [{a[ipv].src}] | [{a[ipv].dport}] | [{a[Raw].load}]")
