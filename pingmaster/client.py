@@ -3,7 +3,7 @@ import random
 import string
 from scapy.all import Raw, sr
 from scapy.layers.inet import IP, TCP, UDP, ICMP
-from scapy.layers.inet6 import IPv6
+from scapy.layers.inet6 import IPv6, ICMPv6Unknown
 from scapy.layers.sctp import SCTP
 import argparse
 import sys, signal
@@ -16,6 +16,41 @@ chars = string.ascii_letters + string.digits
 
 def signal_handler(signal, frame):
     sys.exit(0)
+
+icmp_types_v4 = {
+    0:  "Echo Reply",
+    3:  "Destination Unreachable",
+    4:  "Source Quench",
+    5:  "Redirect",
+    6:  "Alternate Host Address",
+    8:  "Echo Request",
+    9:  "Router Advertisement",
+    10: "Router Solicitation",
+    11: "Time Exceeded",
+    12: "Parameter Problem",
+    13: "Timestamp",
+    14: "Timestamp Reply",
+    15: "Information Request",
+    16: "Information Reply",
+    17: "Address Mask Request",
+    18: "Address Mask Reply",
+    30: "Traceroute",
+    31: "Datagram Conversion Error",
+    32: "Mobile Host Redirect",
+    33: "IPv6 Where-Are-You",
+    34: "IPv6 I-Am-Here",
+    35: "Mobile Registration Request",
+    36: "Mobile Registration Reply",
+    37: "Domain Name Request",
+    38: "Domain Name Reply",
+    39: "SKIP Algorithm Discovery Protocol",
+    40: "Photuris",
+    42: "Extended Echo Request",
+    43: "Extended Echo Reply",
+    253: "Experimental Measurement",
+    254: "Experimental Measurement",
+}
+
 
 def main():
     from pingmaster.pingmain import FLOW_ID
@@ -96,3 +131,17 @@ def main():
                     for _,a in ans:
                         if Raw in a and a[Raw].load.startswith(b"pm") and a[ipv].src == target and m in a:
                             print(f"< [{a[ipv].src}] | [{a[ipv].dport}] | [{a[Raw].load}]")
+        elif m == PingTypes.ICMP:
+            for icmp_type in range(0, MAX_ICMP_TYPES):
+                random_data = b"pm-" + bytes(''.join(random.choice(chars) for _ in range(5)), "utf-8")
+                i = ipv(dst=target, id=FLOW_ID)
+                if ipv == IPv6:
+                    i2 = ICMPv6Unknown(type=icmp_type)
+                else:
+                    i2 = ICMP(type=icmp_type)
+                packet = (
+                    i /
+                    i2 /
+                    Raw(load=random_data)   
+                )
+                print(f"> [{packet[ipv].dst}] | [{icmp_types_v4.get(icmp_type, "Unassigned")}] | [{packet[Raw].load}]")
